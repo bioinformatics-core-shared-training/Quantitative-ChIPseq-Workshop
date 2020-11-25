@@ -1,0 +1,39 @@
+---
+title: "Workshop: Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays"
+#bibliography: "`r system.file('vignettes', 'bibliography.bib', package = 'QuantitativeChIPWorkshop')`"
+#csl: "`r system.file('vignettes', 'nature.csl', package = 'QuantitativeChIPWorkshop')`"
+vignette: >
+  %\VignetteIndexEntry{QuantitativeChIPWorkshop}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+output:
+  bookdown::html_document2:
+    toc: true
+    toc_float: true
+    fig_caption: true
+editor_options:
+  chunk_output_type: console
+---
+The Docker container (https://hub.docker.com/repository/docker/crukcibioinformatics/QuantitativeChIP_workshop) with this workshop has pre-installed dependencies. If you are not using it, you must install the following packages:
+
+## Load required libraries {-#my-section}
+```{r "setup"}
+suppressPackageStartupMessages({
+    library(DiffBind)
+    library(rtracklayer)
+    library(rmarkdown)
+    library(knitr)})
+```
+
+```{r "setup-plot", echo=FALSE}
+## Setup figure caption
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+i <- 0
+generateFigureCaption <- function(cap) {
+    i <<- i+1
+    #return(paste0("Figure ", i, ". ", cap))
+    return(cap)
+}
+```
+
+

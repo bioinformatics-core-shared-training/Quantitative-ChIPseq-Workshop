@@ -1,0 +1,28 @@
+Package: Quantitative-ChIPseq-Workshop
+Title: Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays
+Version: 0.0.1
+Authors@R: 
+    person(given = "Rory",
+           family = "Stark",
+           role = c("aut", "cre"),
+           email = "rory.stark@cruk.cam.ac.uk",
+           comment = c(ORCID = "https://orcid.org/0000-0002-1790-5469")
+Description: This package encapsulates a workshop demonstrating the 
+quantitative analysis  (especially differential binding)  of 
+ChIP-seq, ATAC-seq and related assays using R packages (particularly DiffBind).
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Depends: 
+    Biobase
+Suggests: 
+    knitr,
+    rmarkdown,
+    pkgdown,
+    DiffBind
+URL: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop
+BugReports: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/issues/new/choose
+VignetteBuilder: knitr
+DockerImage: crukcibioinformatics/quantitative_chip_workshop:latest
