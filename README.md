@@ -63,12 +63,12 @@ A mini-lecture will be given at the beginning that will cover basic ideas behind
 ## How to run Docker
 - Install Docker (https://www.docker.com/)
 - Pull the Docker image from Docker hub:
-  `docker pull crukcibioinformatics/QuantitativeChIP_workshop`
+  `docker pull crukcibioinformatics/quantitative_chip_workshop`
 - Run the image:
-  `docker run -e PASSWORD=yourpassword -p 8787:8787 crukcibioinformatics/QuantitativeChIP_workshop`
+  `docker run -e PASSWORD=yourpassword -p 8787:8787 crukcibioinformatics/quantitative_chip_workshop`
 - Log in to RStudio at [http://localhost:8787](http://localhost:8787) using username `rstudio` and password `yourpassword`. For Windows users, you also need to provide your IP address, you can find it using `docker-machine ip default`.
 - Inside the RStudio, run:
-  `browseVignettes(package = "crukcibioinformatics/QuantitativeChIP_workshop")`
+  `browseVignettes(package = "Quantitative-ChIPseq-Workshop")`
 - You can click one of the links: "HTML", "source", "R code"
 
 ## _R_ / _Bioconductor_ packages used
