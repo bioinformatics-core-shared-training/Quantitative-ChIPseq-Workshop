@@ -14,28 +14,28 @@ output:
 editor_options:
   chunk_output_type: console
 ---
-The Docker container (https://hub.docker.com/repository/docker/crukcibioinformatics/QuantitativeChIP_workshop) with this workshop has pre-installed dependencies. If you are not using it, you must install the following packages:
+<!-- The Docker container (https://hub.docker.com/repository/docker/crukcibioinformatics/QuantitativeChIP_workshop) with this workshop has pre-installed dependencies. If you are not using it, you must install the following packages: -->
 
-## Load required libraries {-#my-section}
-```{r "setup"}
-suppressPackageStartupMessages({
-    library(DiffBind)
-    library(csaw)
-    library(GreyListChIP)
-    library(rtracklayer)
-    library(rmarkdown)
-    library(knitr)})
-```
+<!-- ## Load required libraries {-#my-section} -->
+<!-- ```{r "setup"} -->
+<!-- suppressPackageStartupMessages({ -->
+<!--     library(DiffBind) -->
+<!--     library(csaw) -->
+<!--     library(GreyListChIP) -->
+<!--     library(rtracklayer) -->
+<!--     library(rmarkdown) -->
+<!--     library(knitr)}) -->
+<!-- ``` -->
 
-```{r "setup-plot", echo=FALSE}
-## Setup figure caption
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
-i <- 0
-generateFigureCaption <- function(cap) {
-    i <<- i+1
-    #return(paste0("Figure ", i, ". ", cap))
-    return(cap)
-}
-```
+<!-- ```{r "setup-plot", echo=FALSE} -->
+<!-- ## Setup figure caption -->
+<!-- knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE) -->
+<!-- i <- 0 -->
+<!-- generateFigureCaption <- function(cap) { -->
+<!--     i <<- i+1 -->
+<!--     #return(paste0("Figure ", i, ". ", cap)) -->
+<!--     return(cap) -->
+<!-- } -->
+<!-- ``` -->
 
 
