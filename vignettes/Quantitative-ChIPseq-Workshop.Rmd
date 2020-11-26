@@ -20,6 +20,8 @@ The Docker container (https://hub.docker.com/repository/docker/crukcibioinformat
 ```{r "setup"}
 suppressPackageStartupMessages({
     library(DiffBind)
+    library(csaw)
+    library(GreyListChIP)
     library(rtracklayer)
     library(rmarkdown)
     library(knitr)})
