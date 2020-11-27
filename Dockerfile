@@ -1,14 +1,10 @@
-FROM bioconductor/bioconductor_docker:devel
+FROM bioconductor/bioconductor_docker:RELEASE_3_12
 
-RUN Rscript -e "install.packages(c('knitr', 'rmarkdown', 'pkgdown'), repos = 'https://cloud.r-project.org')"
+RUN Rscript -e "install.packages(c('rlang', 'knitr', 'rmarkdown', 'bookdown', 'pkgdown'), repos = 'https://cloud.r-project.org')"
 
 RUN Rscript -e "BiocManager::install()"
 RUN Rscript -e "BiocManager::install('Biobase')"
 RUN Rscript -e "BiocManager::install('DiffBind')"
-
-RUN Rscript -e "install.packages('rlang', repos = 'https://cloud.r-project.org')"
-
-RUN Rscript -e "install.packages('bookdown', repos = 'https://cloud.r-project.org')"
 
 WORKDIR /home/rstudio
 
