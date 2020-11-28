@@ -1,41 +1,159 @@
 ---
-title: "Workshop: Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays"
-#bibliography: "`r system.file('vignettes', 'bibliography.bib', package = 'QuantitativeChIPWorkshop')`"
-#csl: "`r system.file('vignettes', 'nature.csl', package = 'QuantitativeChIPWorkshop')`"
+title: "Workshop: Quantitative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays"
+author:
+  - name: Rory Stark
+    affiliation: Cancer Research UK Cambridge Institute, University of Cambridge, Cambridge, UK
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{QuantitativeChIPWorkshop}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 output:
-  bookdown::html_document2:
+  bookdown::html_document2: default
+  html_document:
     toc: true
+    toc_depth: 2
     toc_float: true
     fig_caption: true
+    number_sections: true
+    mathjax: null
 editor_options:
-  chunk_output_type: console
+    chunk_output_type: console
+bibliography: DiffBind.bib
 ---
-<!-- The Docker container (https://hub.docker.com/repository/docker/crukcibioinformatics/QuantitativeChIP_workshop) with this workshop has pre-installed dependencies. If you are not using it, you must install the following packages: -->
 
-<!-- ## Load required libraries {-#my-section} -->
-<!-- ```{r "setup"} -->
-<!-- suppressPackageStartupMessages({ -->
-<!--     library(DiffBind) -->
-<!--     library(csaw) -->
-<!--     library(GreyListChIP) -->
-<!--     library(rtracklayer) -->
-<!--     library(rmarkdown) -->
-<!--     library(knitr)}) -->
-<!-- ``` -->
+```{css, echo=FALSE}
+.infobox {
+  padding: 1em 1em 1em 4em;
+  margin-bottom: 10px;
+  border: 2px solid #008000;
+  border-radius: 10px;
+  background: #DCDCDC 5px center/3em no-repeat;
+  color: #8B0000;
+}
+.center {
+  text-align: center;
+}
+```
 
-<!-- ```{r "setup-plot", echo=FALSE} -->
-<!-- ## Setup figure caption -->
-<!-- knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE) -->
-<!-- i <- 0 -->
-<!-- generateFigureCaption <- function(cap) { -->
-<!--     i <<- i+1 -->
-<!--     #return(paste0("Figure ", i, ". ", cap)) -->
-<!--     return(cap) -->
-<!-- } -->
-<!-- ``` -->
+```{r, setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(out.width="100%", cache=TRUE)
+knitr::opts_knit$set(root.dir="../inst/extdata")
+```
+
+# Quantitative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays
+
+## Workshop participation
+
+Docker users can run this workshop locally via:
+
+```
+docker run -e PASSWORD=bioc -p 8787:8787 crukcibioinformatics/quantitative_chip_workshop:latest
+```
+
+## Requirements: R/Bioconductor packages
+
+The workshop uses a Docker container with Bioconductor Release version `3.12`.
+If you would like to install Bioconductor on your computer **at a later date**,
+see the [Bioconductor installation](https://www.bioconductor.org/install)
+instructions.
+
+Here is a list of packages that we will be using:
+
+```{r load}
+library(DiffBind)
+library(GreyListChIP)
+library(csaw)
+```
+
+## Let's do a _DiffBind_  analysis!
+
+### Set directory to where the data are
+```{r showdir}
+getwd()
+list.files()
+```
+
+### Complete analysis in one step
+```{r onestep, eval=FALSE}
+tamoxifen <- dba.analyze("tamoxifen.csv")
+```
+
+## Step-by-step analysis
+
+### Examine the sample sheet
+```{r samplesheet}
+samples <- read.csv("tamoxifen.csv", stringsAsFactors = FALSE)
+samples
+```
+
+### Create a DBA object
+```{r dba}
+tamoxifen <- dba(sampleSheet="tamoxifen.csv")
+tamoxifen
+```
+
+### Blacklists and Greylists
+```{r blacklist}
+tamoxifen <- dba.blacklist(tamoxifen)
+```
+
+### Consensus peakset
+```{r rate}
+plot(1:nrow(samples),dba.overlap(tamoxifen,mode=DBA_OLAP_RATE), type="b")
+```
+
+### Count reads
+```{r count}
+tamoxifen <- dba.count(tamoxifen)
+tamoxifen
+```
+
+### Clustering/PCA plots
+```{r countplots}
+plot(tamoxifen)
+dba.plotPCA(tamoxifen, attributes=DBA_CONDITION, label=DBA_TISSUE)
+```
+
+### Normalization
+```{r normalize}
+tamoxifen <- dba.normalize(tamoxifen)
+```
+
+### Modelling
+```{r contrast}
+tamoxifen <- dba.contrast(tamoxifen)
+tamoxifen
+tamoxifen <- dba.contrast(tamoxifen, design="~Tissue + Condition")
+```
+
+### Analysis
+```{r analyze}
+tamoxifen <- dba.analyze(tamoxifen)
+tamoxifen
+```
+
+### Results
+```{r report}
+dba.report(tamoxifen)
+```
+
+### Plots
+```{r plots}
+dba.plotMA(tamoxifen)
+dba.plotVolcano(tamoxifen)
+dba.plotHeatmap(tamoxifen)
+dba.plotHeatmap(tamoxifen, correlations=FALSE)
+dba.plotPCA(tamoxifen)
+dba.plotBox(tamoxifen)
+```
+
+
+
+
+
+
+
 
 
