@@ -5,6 +5,7 @@ RUN Rscript -e "install.packages(c('rlang', 'knitr', 'rmarkdown', 'bookdown', 'p
 RUN Rscript -e "BiocManager::install()"
 RUN Rscript -e "BiocManager::install('Biobase')"
 RUN Rscript -e "BiocManager::install('DiffBind')"
+RUN Rscript -e "BiocManager::install('csaw')"
 
 WORKDIR /home/rstudio
 
