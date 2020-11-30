@@ -149,8 +149,7 @@ dba.plotPCA(tamoxifen)
 dba.plotBox(tamoxifen)
 ```
 
-
-
+# rstudioapi::viewer("/usr/local/lib/R/site-library/QuantitativeChIPseqWorkshop/doc/Quantitative-ChIPseq-Workshop.html")
 
 
 
