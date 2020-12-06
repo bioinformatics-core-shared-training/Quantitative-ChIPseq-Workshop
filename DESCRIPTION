@@ -1,6 +1,6 @@
 Package: QuantitativeChIPseqWorkshop
 Title: Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: 
     person(given = "Rory",
            family = "Stark",
@@ -24,4 +24,4 @@ Suggests:
 URL: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop
 BugReports: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/issues/new/choose
 VignetteBuilder: knitr
-DockerImage: crukcibioinformatics/quantitative_chip_workshop:latest
+DockerImage: crukcibioinformatics/quantitative_chip_workshop
