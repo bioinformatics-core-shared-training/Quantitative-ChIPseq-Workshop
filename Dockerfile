@@ -13,6 +13,7 @@ COPY --chown=rstudio:rstudio . /home/rstudio/
 RUN wget https://content.cruk.cam.ac.uk/bioinformatics/software/DiffBind/DiffBind_vignette_data.tar.gz 
 RUN tar --warning=no-unknown-keyword -xzf DiffBind_vignette_data.tar.gz
 RUN rm DiffBind_vignette_data.tar.gz
+RUN rm -rf /home/rstudio/inst/extdata
 RUN mv DiffBind_Vignette/ /home/rstudio/inst/extdata/
 
 RUN Rscript -e "options(repos = c(CRAN = 'https://cran.r-project.org')); devtools::install('/home/rstudio/', dependencies=FALSE, build_vignettes=FALSE, repos = BiocManager::repositories())"

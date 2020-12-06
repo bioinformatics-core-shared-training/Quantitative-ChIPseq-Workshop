@@ -18,7 +18,7 @@ Depends:
 Suggests: 
     knitr,
     rmarkdown,
-    pkgdown,
+    bookdown,
     DiffBind,
     csaw
 URL: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop
