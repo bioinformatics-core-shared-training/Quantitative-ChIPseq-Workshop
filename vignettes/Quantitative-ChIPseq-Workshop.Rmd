@@ -77,7 +77,7 @@ library(csaw)
 
 First make sure your current working directory is correct:
 
-```{r showdir}
+```{r showdir, echo=FALSE}
 getwd()
 ```
 
@@ -85,7 +85,7 @@ The directory should be `"/home/rstudio/inst/extdata"`.
 If it is not, change the working directory:
 
 ```{r chrdir, eval=FALSE,echo=TRUE}
-setwd("../inst/extdata")
+setwd("inst/extdata")
 ```
 
 ## Loading an experiment into `DiffBind`
@@ -155,9 +155,491 @@ This can take the form of a `.csv` file, or a `dataframe`.
 
 We can read in the sample sheet provided for the example data set:
 
-```{r checkwd}
-getwd()
-list.files()
-list.files("..")
+
+```{r samplesheet}
+samples <- read.csv("tamoxifen.csv")
+samples
 ```
+
+Here we see the example ChIP-seq data set used for this tutorial.
+It consists of 11 samples, all ChIPed for the same factor 
+(ER, the estrogen receptor).
+There are four breast-cancer cell lines involved, representing
+two experimental conditions:
+cells that either `Responsive` to the drug tamoxifen, or those that
+are `Resistant` to tamoxifen. 
+Note that one cell line (MCF7) is marked as being both `Resposnsive`and `Resistant`;
+these cells are naturally `Responsive`, but a `Resistant` version has
+been derived by treating with tamoxifen until only resistant cells remain.
+The goal of the experiment is to examine changes in ER binding patterns
+between the two conditions.
+
+There are seven replicates of `Responsive` samples, encompassing three 
+different cell lines, with two or three replicates for each `Responsive`cell line.
+There are four replicates of `Resistant` samples in two cell lines,
+each with two replicates.
+For each sample we have a set of aligned reads (note that only reads aligned
+to chromosome 18 are included to speed up the example analysis),
+and an Input control is available for each cell line/condition combination.
+
+Peaks are included in `.bed` format (they were originally called 
+using `MACS` [@zhang2008model].)
+
+### Loading the experiment into `DiffBind`
+
+At this point a complete default end-to-end analysis could be
+run using a single command: `result <- dba(samples)`. 
+Instead, we are going to walk through each of the steps
+of the analysis one at a time.
+
+First load the experiment into `DiffBind` either by supplying the original
+`.csv` file or using the loaded `samples` dataframe:
+```{r loadsamples}
+tam.peaks <- dba(sampleSheet="tamoxifen.csv")
+```
+
+This creates a `DBA` object we've called `tam.peaks`, which can be examined:
+
+```{r showtam}
+tam.peaks
+```
+
+This shows the metadata for the 11 samples, along with how many called peaks
+were included for each. 
+After loading, overlapping peaks are merged; there are a total
+of 3,795 unique regions specified, with 2,845 of them overlapping peaks
+called in at least two samples.
+
+## Blacklists and greylists
+
+Now that the peaks are loaded, it is good practice to filter out
+peaks called in problematic regions.
+This is accomplished using a standard, published `Blacklist` of areas in 
+in reference genome known to be problematic\cite{amemiya2019blacklist}.
+The best known lists have been identified
+as part of the ENCODE project [@amemiya2019blacklist] and are
+available for a variety of reference genomes and genome versions.
+The current ENCODE blacklists are available through
+the `dba.blacklist()` function.
+
+In addition, if control alignments are available for an experiment,
+experiment-specific exclusion lists can be generated reflecting
+the tissue and experimental conditions used.
+We call these `Greylists` and are generated using
+the `GreyListChIP`package [@brown2015greylistchip].
+The idea is to analyze libraries that are not
+meant to show systematic enrichment (such as Inputs, in which no
+anti-body is introduced), and identify anomalous regions
+where a disproportionate degree of signal is present.
+
+### Applying a blacklist
+
+If an ENCODE blacklists exists for the reference genome used to
+align the experimental data, it can be applied
+automatically using the `dba.blacklist()` function.
+The reference genome is automatically detected from the supplied
+`.bam` files.
+
+```{r blacklist}
+dba.blacklist(tam.peaks, blacklist=TRUE, greylist=FALSE)
+```
+
+This shows that the blacklist filtered out one merged peak that had been 
+called in three of the samples.
+
+### Generating and applying a greylist
+
+Greylists can be automatically generated from the controls as
+`DiffBind` provides an interface to the `GreyListChIP` package.
+This can be a time-consuming operation, as each of the controls is analyzed for anomalous regions.
+
+The blacklist can be applied, and the greylists generated and applied, in 
+a single step:
+
+```{r greylist, eval=FALSE}
+tam.peaks <- dba.blacklist(tam.peaks)
+```
+
+To save time, greylists for the example data set are included,
+and we can apply them directly:
+
+```{r loadgrey}
+data(tamoxifen_greylist)
+names(tamoxifen.greylist)
+```
+In this object, there is a "master" greylist formed from the 
+individual greylist (computed one per control):
+
+```{r greymaster}
+tamoxifen.greylist$master
+names(tamoxifen.greylist$controls)
+```
+
+Now we can apply it:
+
+```{r applygrey}
+tam.peaks <- dba.blacklist(tam.peaks, blacklist=DBA_BLACKLIST_HG19,
+                           greylist=tamoxifen.greylist)
+```
+
+The greylist results in 52 merged peaks being filtered out 
+(50 in the at-least-two-sample consensus), 
+representing some 420 of the originally supplied peaks.
+
+## Consensus peaks sets and counting reads
+
+The central vehicle for conducting a quantitative analysis is a *binding matrix*,
+with rows representing genomic intervals, columns representing samples, 
+and values representing overlapping read counts (similar to an expression matrix
+in RNA-seq). 
+To compute this, we need to define the rows in the form of a *consensus peak set*.
+
+### Consensus peak set
+
+One straightforward way to determine the consensus peaks is to consider
+genomic intervals that are identified as peaks in one or more of the samples.
+It can be helpful to make a plot of how many peaks overlap in how many samples:
+
+```{r rateplot}
+olap.rate <- dba.overlap(tam.peaks, mode=DBA_OLAP_RATE)
+olap.rate
+plot(olap.rate, xlab="Overlapping samples", ylab="Overlapping peaks", type="b")
+```
+
+This shows that there are `r olap.rate[1]` total merged
+peaks, representing the union of all intervals. 
+At the other extreme, there are `r olap.rate[11]` peaks that overlap
+in all 11 samples, representing the intersection of all the samples.
+
+Which should we chose? Given the rigor of the underlying statistical analysis,
+we can choose a more inclusive consensus set. 
+The default is to make the consensus peak set using peaks identified in at least
+two samples (`r olap.rate[2]`).
+
+More complex schemes, such as forming a consensus peak set separately from
+the replicates for each condition and then taking the union of these, are
+also possible.
+
+The default consensus peak set can be retrieved:
+
+```{r consensus}
+consensus.peaks <- dba.peakset(tam.peaks, bRetrieve=TRUE)
+consensus.peaks[,0]
+```
+
+### Counting overlapping reads
+
+The next step is to form the binding matrix using the consensus peak and
+computing overlapping read counts for each peak in each sample,
+*whether or not it was called as a peak in that sample.*
+
+The function used to accomplish this is `dba.count()`:
+
+```{r count, eval=FALSE}
+tam.counts <- dba.count(tam.peaks)
+```
+
+NB: this call may take some time. You can, alternatively,
+obtain the results as follows:
+```{r loadcounts}
+data(tamoxifen_counts)
+tam.counts <- tamoxifen
+```
+
+`dba.count()` takes a number of parameter to control it's default behavior.
+Here is a list of some important ones:
+
+* **peaks** accepts a consensus peak set. We could have used the peak set 
+retrieved above by specifying `peaks=consensus.peaks`. 
+* **summits** activates a two-stage counting process. In the first stage,
+a "summit" is computed for each peak based on the read pileups at each base
+for each sample the peak was called in. The peak intervals are then re-specified
+to be a constant interval upstream and downstream of this summit. 
+The default of `summits=200`, intended for ChIP-seq, results in 401bp peaks 
+(The summit point plus 200bp in each direction). 
+In the second phase reads are re-counted overlapping these intervals.
+* **filter** will eliminate consensus peaks with lower than a set threshold
+of counts. The default `filter=1` will filter consensus peaks where there is
+not at least one sample whose RPKM (reads per kilobase per million reads) 
+is greater than 1.
+* **bRemoveDuplicates** controls how duplicate alignments (multiple
+reads mapping to the exact same genomic position) are handled. 
+The default `bRemoveDuplicates=FALSE` will keep and count duplicates,
+as DNA enrichment assays often include biologically meaningful
+duplicate reads (especially when using short read or single-end sequencing).
+* **mapQCth** sets a threshold for ignoring low-quality alignment.
+The default value of `mapQCth=15` results in all multi-mapped reads
+(reads that can map to multiple locations in the genome) being ignored.
+
+After counting the reads, the DBA object reflects the consensus peak set
+rather than the original peak data:
+
+```{r countobject}
+tam.counts
+```
+
+Now all eleven samples have counts for all 2,845 consensus sites.
+Two columns have been added to the display, showing the total number
+of aligned `Reads` in each `.bam`file, and 
+the Fraction of Reads in Peaks (`FRiP`) representing the proportion
+of reads that were counted as overlapping a consensus site.
+
+## Examining and normalizing the binding matrix
+
+At this stage it is worth looking more closely at certain
+aspects of the binding matrix in preparation for normalization and modeling.
+
+### Plots to look for a batch effect
+Of particular interest is the presence of technical
+effects in the experiment, such as batch effects.
+
+We can look at how the samples cluster using heatmaps and PCA plots.
+A correlation heatmap (in which correlations values
+between each pair of columns in the binding matrix is calculated)
+can be shown using `dba.plotHeatmap()`, which is also the
+default plot:
+
+```{r counthm}
+plot(tam.counts)
+```
+
+This shows a very high correlation between the replicate for each sample type,
+which indicates that there is not a large batch effect.
+The main clustering divides the samples into those derived from the
+MCF7 cell line, which are all highly correlated,
+with the other cell lines clustering together.
+At this point, we do not see a natural clustering into
+tamoxifen `Responsive` and `Resistant` clusters.
+
+We can verify that there  is no obvious batch effect with
+a PCA plot:
+
+```{r countPCA}
+dba.plotPCA(tam.counts,DBA_REPLICATE, label=DBA_TISSUE)
+```
+
+### Normalization (deault)
+
+The next step is to normalize the data.
+Normalization of ChIP and ATAC sequencing data is not always straightforward,
+especially compared to normalization of RNA-seq data.
+We will look more closely at these issues in a subsequent section.
+For now we will use the default normalization in `DiffBind`,
+which makes minimal assumptions about the data and seeks to "do no harm". 
+
+First let's make an MA plot of the date before normalization.
+An MA plot shows how the fold changes between conditions are distributed
+as the mean concdntration of reads counts increases.
+For this plot, we'll compare use the sample sin the `Responsive`condition 
+as the baseline, and see how the samples in the
+`Resistant`condition compare.
+
+```{r maraw}
+dba.plotMA(tam.counts, bNormalized=FALSE, sub="Non-Normalized",
+           contrast=list(Resistant=tam.counts$masks$Resistant,
+                         Responsive=tam.counts$masks$Responsive))
+```
+In this plot, each of the consensus site is a point (smoothed),
+while the the X-axis orders them according to the mean number of  
+overlapping read counts for the consensus site,
+and the Y-axis shows the log2 fold change.
+Points above the 0-fold line (blue) demonstrate greater enrichment of reads in
+the `Resistant`condition, while point below the 0-fold line
+are more enriched int he `Responsive` condition.
+The red curve is a loess fit showing the overall trend in the data.
+
+This plots shows that in the raw data, the `Responsive` condition samples
+have overall higher concentration of overlapping reads in consensus peaks.
+This could either be a technical bias, or an indication that there
+is a loss of ER binding in the tamoxifen resistant condition.
+
+By default, `DiffBind` normalizes only using the full library sizes
+of the samples (total aligned reads in the `.bam`).
+Perform a default normalization and see how the plot changes:
+```{r normdef}
+tam.counts <- dba.normalize(tam.counts)
+dba.plotMA(tam.counts, sub="Normalized (Default)",
+           contrast=list(Resistant=tam.counts$masks$Resistant,
+                         Responsive=tam.counts$masks$Responsive))
+```
+
+Compared to the non-normalized data, the fold changes are somewhat mnore balanced
+and moved closer to the central 0-fold line, although the loess fit
+shows there is still a bias towards greater enrichment in the 
+`Responsive` condition.
+
+We will consider normalization in more depth after modeling the data,
+as it is useful to consider
+the impact of normalization on the modeling results.
+
+## Modeling and testing
+
+The core differential analysis in `DiffBind`is performed by one or
+more underlying read count modeling Bioconductor packges.
+The default package is `DESeq2` [@Love2014]; 
+the `edgeR` package [@Robinson:2010p249] may be also used either as an
+alternative or in parallel.
+These packages, developed for modeling RNA-seq read counts, enable GLMs
+to be fit.
+
+### Default model
+
+The `DiffBind` function `dba.contrast()` is used to specify the model
+and establish contrasts to be tested against the model.
+A default model and contrasts(s) can easily be established:
+
+```{r modeldef}
+tam.model <- dba.contrast(tam.counts)
+tam.model
+```
+
+The default model is based on observing that there is only
+one metadata field, `Condition`, that has a) multiple values and
+b) at least three samples having each value.
+A design formula is established using this factor 
+and a contrast comparing `Resistant` samples against the `Responsive` samples,
+with four samples in the `Resistant` condition 
+and seven samples in the `Responsive` condition.
+
+### Fitting and testing
+
+With the design formula in place, and a contrast established,
+the model can be fit with `DESeq2` and tests applied for the contrast:
+
+```{r analyze}
+tam.model <- dba.analyze(tam.model)
+dba.show(tam.model,bContrasts=TRUE)
+```
+
+At the default threshold of `FDR < 0.05`, 
+some `r dba.show(tam.model,bContrasts=TRUE)$DB.DESeq2`
+sites are identified as being differentially bound.
+
+## Examining analysis results
+
+After conducting an analysis, the results can be examined
+in a number of ways, including obtaining a report with the
+differential sites, as well as some useful plots.
+
+### Reporting: obtaining differential sites
+
+The differential sites may be retrieved as a `GRanges` object:
+
+```{r report}
+tam.db <- dba.report(tam.model)
+tam.db
+```
+
+For each site, the genomic interval is reported, as well as the
+key statistics:
+
+* **Conc**: Mean concentration of (normalized) reads across all samples,
+reported as a log2 value.
+* **Conc_Resistant**: Mean concentration of (normalized) reads across the
+`Resistant` samples, reported as a log2 value.
+* **Conc_Responsive**: Mean concentration of (normalized) reads across the
+`Responsive` samples, reported as a log2 value.
+* **Fold**: Log2 Fold Change, as computed by `DESeq2`.
+* **p-value**: p-value for the comparison, as computed by `DESeq2`.
+* **FDR**: multiple-testing corrected significance value for the comparison, 
+as computed by `DESeq2`.
+
+We can look at the balance between Gain and Loss sites:
+
+```{r gainloss}
+sum(tam.db$Fold>0)
+sum(tam.db$Fold<0)
+```
+
+The report object can now be used for downstream analysis,
+such as motif analysis, annotation to genomic features, etc.
+
+### Plotting: MA plot
+
+After an analysis, it is useful to generate an MA plot
+with the differential sites superimposed:
+
+```{r macontrast}
+dba.plotMA(tam.model)
+```
+
+### Plotting: Volcano plot
+
+Similar to an MA plot, a volcano plot shows the log fold change 
+(on the X-axis instead fo the Y-axis), compared to the
+inverse of the FDR on the Y-axis, to show how FDR and LFC are related:
+
+```{r volcano}
+dba.plotVolcano(tam.model)
+```
+
+### Plotting: Clustering correlation heatmap
+
+We can also re-visit the clustering plots we originally did
+on the full binding matrix, except this time only
+taking differential sites intro consideration:
+
+```{r corhmcontrast}
+plot(tam.model, contrast=1)
+```
+
+As we would hope, the differential sites separate the samples
+into two clusters, one `Resistant` and one `Responsive`.  
+
+### Plotting: PCA plot
+
+Likewise, a PCA plot based only on the differential sites
+shows how the samples can be separated by condition:
+
+```{r pcacontrast}
+dba.plotPCA(tam.model, contrast=1, label=DBA_TISSUE)
+```
+
+### Plotting: Read concentration heatmap
+
+In addition to the correlation heatmap, a plot showing
+the read concentrations can also be generated. 
+In this case we scale the read concentrations
+for each site, to emphasize the difference
+between the lowest and highest values:
+
+```{r hmcontrast}
+hmap <- colorRampPalette(c("red", "black", "green"))(n = 13)
+readscores <- dba.plotHeatmap(tam.model, contrast=1, correlations=FALSE,
+                              scale="row", colScheme = hmap)
+```
+
+## Multi-factor design
+
+The default design and contrasts may not be the correct ones,
+as they may not be focused on the factors of interest.
+In the current case, it turns out that it is important
+to use a multi-factor design in order to model
+the use of different cell lines with each condition,
+and most importantly the fact that a single cell origin (MCF7)
+is used across conditions.
+
+In the current case, we will change the model to the
+"correct" multi-factor design before proceeding:
+
+```{r modelmulti}
+tam.model <- dba.contrast(tam.model, design="~Tissue + Condition")
+dba.show(tam.model,bDesign=TRUE)
+tam.model <- dba.analyze(tam.model)
+tam.model
+```
+
+With the multi-factor model taking into account the underlying
+tissue types, we now identify
+`r dba.show(tam.model,bContrasts=TRUE)$DB.DESeq2`
+differential sites at the default threshold of `FDR < 0.05`.
+The resulting MA plot shows these are biased towards
+loss of binding the in `Resistant` condition:
+
+```{r mamulti}
+dba.plotMA(tam.model, contrast=1)
+```
+
+
+## References
 
