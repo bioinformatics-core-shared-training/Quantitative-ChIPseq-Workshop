@@ -1,6 +1,6 @@
 Package: QuantitativeChIPseqWorkshop
 Title: Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays
-Version: 0.0.4
+Version: 0.0.5
 Authors@R: 
     person(given = "Rory",
            family = "Stark",
@@ -19,8 +19,10 @@ Suggests:
     knitr,
     rmarkdown,
     bookdown,
+    pkgdown,
     DiffBind,
-    csaw
+    csaw,
+    GreyListChIP
 URL: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop
 BugReports: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/issues/new/choose
 VignetteBuilder: knitr
