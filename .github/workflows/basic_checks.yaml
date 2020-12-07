@@ -40,13 +40,13 @@ jobs:
       #     remotes::install_cran("rcmdcheck")
       #   shell: Rscript {0}
           
-      - name: Download workshop data
+      - name: Set up workshop data
         run: |
           wget https://content.cruk.cam.ac.uk/bioinformatics/software/DiffBind/DiffBind_vignette_data.tar.gz
           tar --warning=no-unknown-keyword -xzf DiffBind_vignette_data.tar.gz
           rm DiffBind_vignette_data.tar.gz
-          rm -rf /home/rstudio/inst/extdata
-          mv DiffBind_Vignette/ /home/rstudio/inst/extdata/
+          rm -rf inst/extdata
+          mv DiffBind_Vignette/ inst/extdata/
           ls -lR inst
 
       # - name: Check
