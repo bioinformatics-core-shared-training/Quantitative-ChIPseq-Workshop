@@ -48,16 +48,17 @@ jobs:
           rm -rf inst/extdata
           mv DiffBind_Vignette/ inst/extdata/
           ls -lR inst
-
-       - name: Check
-         env:
-           _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          
+      - name: Check
+        env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: rcmdcheck::rcmdcheck(args = c("--no-manual"), error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Build pkgdown
         run: |
            PATH=$PATH:$HOME/bin/ Rscript -e 'pkgdown::build_site(".")'
+           
       # deploy needs rsync? Seems so.
       - name: Install deploy dependencies
         run: |
