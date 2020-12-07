@@ -42,13 +42,12 @@ jobs:
           
       - name: Download workshop data
         run: |
-          curl https://content.cruk.cam.ac.uk/bioinformatics/software/DiffBind/DiffBind_vignette_data.tar.gz -o DiffBind_vignette_data.tar.gz
+          wget https://content.cruk.cam.ac.uk/bioinformatics/software/DiffBind/DiffBind_vignette_data.tar.gz
           tar --warning=no-unknown-keyword -xzf DiffBind_vignette_data.tar.gz
           rm DiffBind_vignette_data.tar.gz
           rm -rf /home/rstudio/inst/extdata
           mv DiffBind_Vignette/ /home/rstudio/inst/extdata/
           ls -lR inst
-        shell: Rscript {0}
 
       # - name: Check
       #   env:
