@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   Quantitative-ChIPseq-Workshop: Quantitative-ChIPseq-Workshop.html
-last_built: 2020-12-07T00:31Z
+last_built: 2020-12-07T15:46Z
 urls:
   reference: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/reference
   article: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/articles
