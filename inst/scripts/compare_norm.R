@@ -13,14 +13,6 @@ for(norm in c("lib","RLE","TMM")) {
         background <- NULL
       }
     } 
-    if(norm == "loess" && !is.null(background)) {
-      offsets <- TRUE
-      if(libsize != "background") {
-        background <- FALSE
-      } else {
-        background <- NULL
-      }
-    }
     if(!is.null(background)) {
       tam <- dba.normalize(tam.model, method=DBA_ALL_METHODS,
                            normalize=norm, library=libsize, 
