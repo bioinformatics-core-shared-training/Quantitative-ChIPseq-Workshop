@@ -19,7 +19,7 @@ rory.stark@cruk.cam.ac.uk
 
 This workshop will demonstrate the steps involved in performing a 
 quantitative analysis of ChIP-seq data in _Bioconductor_
-(up to and including differential binding analysis), 
+(specifically differential binding analysis), 
 with some discussion of related assays such as ATAC-seq.
 Particular attention will be paid to processing of aligned reads, 
 including blacklisting, greylisting, filtering for quality and duplication,
@@ -58,18 +58,80 @@ Springer, Cham, 2016. 223-260.
 Email the instructor if you would like a copy.
 
 ## Workshop participation
-A mini-lecture will be given at the beginning that will cover basic ideas behind ChIP-seq, comparision of commonly used tools for ChIP-seq data analysis. Then, a hands-on demo will be performed to demonstrate the downstream analysis with ChIPpeakAnno and trackViewer packages. Last will be a Q/A section.
+Students will participate by following along an [_R markdown_](https://rmarkdown.rstudio.com/) document, and asking questions throughout the workshop.
 
-## How to run Docker
-- Install Docker (https://www.docker.com/)
-- Pull the Docker image from Docker hub:
-  `docker pull crukcibioinformatics/quantitative_chip_workshop`
-- Run the image:
-  `docker run -e PASSWORD=yourpassword -p 8787:8787 crukcibioinformatics/quantitative_chip_workshop`
-- Log in to RStudio at [http://localhost:8787](http://localhost:8787) using username `rstudio` and password `yourpassword`. For Windows users, you also need to provide your IP address, you can find it using `docker-machine ip default`.
-- Inside the RStudio, run:
-  `browseVignettes(package = "Quantitative-ChIPseq-Workshop")`
-- You can click one of the links: "HTML", "source", "R code"
+The conference organizers have arranged for attendees to have access to a RStudio
+session running inside a Docker instance that contains everything you need to follow
+the workshop.
+
+**NOTE**: *The workshop Docker instance does not have much compute power.*
+*As a result, it is not possible to run all the code in the time allowed.*
+*Two operations are affected: building greylists, and counting reads.*
+*In these cases, the workshop includes pre-computed data objects that*
+*can be loaded to avoid the time-consuming code.*
+*This is noted inline.*
+
+## Workshop participation -- local Docker image
+
+If you do **not** have access to the RStudio instance provided by the conference
+organizers, or you would like to run the Docker image
+locally and you have a Docker client installed on your machine,
+you run this workshop locally via:
+
+```
+docker pull crukcibioinformatics/quantitative_chip_workshop:latest
+docker images
+docker run -e PASSWORD=DiffBind -p 8787:8787 <imageid> 
+```
+Then open a browser and go to the URL **localhost:8787**.
+Log into RStudio with **username:rstudio** and **password:DiffBind**.
+
+## Workshop participation -- local R installation
+
+The workshop uses a Docker container with Bioconductor Release version `3.12`.
+If you would like to install Bioconductor on your computer,
+install R and the required Bioconductor packages,
+including this workshop package.
+
+## How to follow the workshop
+
+First load the workshop package:
+
+```
+library(QuantitativeChIPseqWorkshop)
+```
+
+There are a number of ways to follow the workshop:
+
+### Follow the workshop in the pre-built HTML in RStudio
+You can open the fully built workshop (with all code and results) in
+the "Help" pane in RStudio as follows:
+
+```
+vignette("Quantitative-ChIPseq-Workshop","QuantitativeChIPseqWorkshop")
+```
+
+### Follow the workshop in the pre-built HTML in a searate Browser window or tab
+If you are using the Docker image,
+You can open the fully built workshop (with all code and results) in
+a browser tab as follows:
+
+```
+rstudioapi::viewer(paste(system.file("doc",package="QuantitativeChIPseqWorkshop"),
+                         "Quantitative-ChIPseq-Workshop.html", sep="/"))
+```
+
+It may be helpful to move the tab into its own window so you can see the vignette and the RStudio window at the same time.
+
+### Follow the workshop directly in the workshop mark-down file
+
+You can open the workshop "source" .Rmd file in the RStudio
+"Source" pane, and follow along, 
+executing each code chunk in sequence, to build it as you go.
+
+```
+file.edit("vignettes/Quantitative-ChIPseq-Workshop.Rmd")
+```
 
 ## _R_ / _Bioconductor_ packages used
 
@@ -93,12 +155,11 @@ Approximate timing of activities:
 | _DiffBind_ Sample sheet         |  5m  |
 | Blacklists and Greylists        | 10m  |
 | Counting aligned reads          | 10m  |
-| Normalization I                 |  5m  |
-| GLM model design and contrasts  | 10m  |
-| Normalization II                | 10m  |
-| Reporting                       |  5m  |
-| Plotting                        | 10m  |
-| Exporting results for downstream analysis |  5m  |
+| Examining and normalizing the binding matrix |  10m  |
+| Modeling and Testing            |  5m  |
+| Examining analysis results      | 10m  |
+| Multi-factor Design             |  5m  |
+| Normalization discussion        | 15m  |
 | Conclusions                     |  5m  |
 
 # Workshop goals and objectives

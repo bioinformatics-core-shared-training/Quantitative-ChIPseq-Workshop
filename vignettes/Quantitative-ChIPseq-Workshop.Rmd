@@ -42,20 +42,36 @@ knitr::opts_chunk$set(out.width="100%", cache=TRUE)
 knitr::opts_knit$set(root.dir="../inst/extdata")
 ```
 
-# Quantitative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays
+<br><br><br><br>
 
-## Workshop participation
+# Workshop participation
 
-Docker users can run this workshop locally via:
+<br>
+
+Instructions on how to run and follow along during the workshop.
+
+## Workshop participation -- local Docker image
+
+If you **not** are already logged into an RStudio instance provided by the conference
+organizers, and you have a Docker client installed on your machine,
+you run this workshop locally via:
 
 ```
-docker run -e PASSWORD=DiffBind -p 8787:8787 crukcibioinformatics/quantitative_chip_workshop:latest
+docker pull crukcibioinformatics/quantitative_chip_workshop:latest
+docker images
+docker run -e PASSWORD=DiffBind -p 8787:8787 <imageid> 
 ```
-
 Then open a browser and go to the URL **localhost:8787**.
 Log into RStudio with **username:rstudio** and **password:DiffBind**.
 
-## Requirements: R/Bioconductor packages
+**NOTE**: *The workshop Docker instance does not have much compute power.*
+*As a result, it is not possible to run all the code in the time allowed.*
+*Two operations are affected: building greylists, and counting reads.*
+*In these cases, the workshop includes pre-computed data objects that*
+*can be loaded to avoid the time-consuming code.*
+*This is noted inline.*
+
+## Workshop participation -- local R installation
 
 The workshop uses a Docker container with Bioconductor Release version `3.12`.
 If you would like to install Bioconductor on your computer **at a later date**,
@@ -64,14 +80,52 @@ instructions.
 
 Here is a list of packages that we will be using:
 
-```{r loadpackages}
+```{r loadpackages, message=FALSE}
 library(DiffBind)
 library(GreyListChIP)
 library(csaw)
 ```
 
-## Introduction
+## How to follow the workshop
 
+First load the workshop package:
+
+```{r loadworkshop, eval=FALSE}
+library(QuantitativeChIPseqWorkshop)
+```
+
+There are a number of ways to follow the workshop:
+
+### Follow the workshop in the pre-built HTML in RStudio
+You can open the fully built workshop (with all code and results) in
+the "Help" pane in RStudio as follows:
+
+```{r workshoppane, eval=FALSE}
+vignette("Quantitative-ChIPseq-Workshop","QuantitativeChIPseqWorkshop")
+```
+
+### Follow the workshop in the pre-built HTML in a searate Browser window or tab
+If you are using the Docker image,
+You can open the fully built workshop (with all code and results) in
+a browser tab as follows:
+
+```{r workshopbrowser, eval=FALSE}
+rstudioapi::viewer(paste(system.file("doc",
+                                     package="QuantitativeChIPseqWorkshop"),
+                         "Quantitative-ChIPseq-Workshop.html", sep="/"))
+```
+
+It may be helpful to move the tab into its own window so you can see the vignette and the RStudio window at the same time.
+
+### Follow the workshop directly in the workshop mark-down file
+
+You can open the workshop "source" .Rmd file in the RStudio
+"Source" pane, and follow along, 
+executing each code chunk in sequence, to build it as you go.
+
+```{r workshopsource, eval=FALSE}
+file.edit("vignettes/Quantitative-ChIPseq-Workshop.Rmd")
+```
 
 ### Set directory to where the data are
 
@@ -88,15 +142,23 @@ If it is not, change the working directory:
 setwd("inst/extdata")
 ```
 
-## Loading an experiment into `DiffBind`
+<br><br><br><br>
 
-### What do you need to do a quantitiative analysis of an experiment?
+# Loading an experiment into `DiffBind`
+
+<br>
+
+The first step in a quantitative analysis is setting up the experiment
+so that `DiffBind` has all the information it needs.
+For many project, this can be the most time-consuming step!
+
+## What do you need to do a quantitiative analysis of an experiment?
 
 In order to run an quantitative analysis, all the experimental data
 must be ready. 
 This includes three types of data:
 
-#### Sample metadata
+### Sample metadata
 
 An experiment is based on a number of **samples**. 
 Each sample needs a unique **SampleID**.
@@ -121,7 +183,7 @@ Finally it is imperative that the experimental classes be represented by
 without replicated data to capture variance.*
 Generally a minimum of three replicates are required to obtain meaningful results.
 
-#### Aligned sequencing read data
+### Aligned sequencing read data
 
 The second type of data needed for an analysis are aligned sequencing reads,
 generally in the form of '.bam' files.
@@ -134,7 +196,7 @@ or sample class. For ChIP experiments, this is most often an Input control
 ATAC experiment usually do not have a control.
 * **SpikeIn** - an option set of spike-in reads for normalization.
 
-#### Called peaks
+### Called peaks
 
 The type of analysis we are discussing today requires that a peak caller 
 (such as **MACS**) has been used on the aligned reads to call peaks.
@@ -147,14 +209,13 @@ An alternative is to perform a quantitative analysis using windows that cover
 the entire genome. 
 The `csaw` package [@lun2016csaw] provides a tool to perform such an analysis.
 
-### Making a samplesheet
+## Making a samplesheet
 
 The easiest way to set up an experiment for analysis in `DiffBind`is to use
 a *sample sheet*. 
 This can take the form of a `.csv` file, or a `dataframe`.
 
 We can read in the sample sheet provided for the example data set:
-
 
 ```{r samplesheet}
 samples <- read.csv("tamoxifen.csv")
@@ -185,16 +246,21 @@ and an Input control is available for each cell line/condition combination.
 Peaks are included in `.bed` format (they were originally called 
 using `MACS` [@zhang2008model].)
 
-### Loading the experiment into `DiffBind`
+## Loading the experiment into `DiffBind`
 
 At this point a complete default end-to-end analysis could be
-run using a single command: `result <- dba(samples)`. 
+run using a single command (**Do not run this code during the workshop!**): 
+
+```{r oneshot, eval=FALSE}
+result <- dba(samples)
+```
+
 Instead, we are going to walk through each of the steps
 of the analysis one at a time.
 
 First load the experiment into `DiffBind` either by supplying the original
 `.csv` file or using the loaded `samples` dataframe:
-```{r loadsamples}
+```{r loadsamples, collapse=TRUE}
 tam.peaks <- dba(sampleSheet="tamoxifen.csv")
 ```
 
@@ -210,7 +276,12 @@ After loading, overlapping peaks are merged; there are a total
 of 3,795 unique regions specified, with 2,845 of them overlapping peaks
 called in at least two samples.
 
-## Blacklists and greylists
+<br><br><br><br>
+
+
+# Blacklists and greylists
+
+<br>
 
 Now that the peaks are loaded, it is good practice to filter out
 peaks called in problematic regions.
@@ -232,7 +303,7 @@ meant to show systematic enrichment (such as Inputs, in which no
 anti-body is introduced), and identify anomalous regions
 where a disproportionate degree of signal is present.
 
-### Applying a blacklist
+## Applying a blacklist
 
 If an ENCODE blacklists exists for the reference genome used to
 align the experimental data, it can be applied
@@ -240,27 +311,54 @@ automatically using the `dba.blacklist()` function.
 The reference genome is automatically detected from the supplied
 `.bam` files.
 
-```{r blacklist}
+```{r blacklist, collapse=TRUE}
 dba.blacklist(tam.peaks, blacklist=TRUE, greylist=FALSE)
 ```
 
 This shows that the blacklist filtered out one merged peak that had been 
 called in three of the samples.
 
-### Generating and applying a greylist
+## Generating and applying a greylist
 
 Greylists can be automatically generated from the controls as
 `DiffBind` provides an interface to the `GreyListChIP` package.
 This can be a time-consuming operation, as each of the controls is analyzed for anomalous regions.
 
 The blacklist can be applied, and the greylists generated and applied, in 
-a single step:
+a single step 
+*NB: This is a compute-intensive step that takes too long to run in the workshop*
+*Docker instance;* **do not run the following chunk** *if you are using the*
+*workshop Docker image*:
 
 ```{r greylist, eval=FALSE}
 tam.peaks <- dba.blacklist(tam.peaks)
 ```
+```{r greylistout, eval=FALSE}
+## Genome detected: Hsapiens.UCSC.hg19
+## Applying blacklist...
+## Removed: 3 of 14102 intervals.
+## Counting control reads for greylist...
+## Building greylist: reads/Chr18_BT474_input.bam
+## coverage: 166912 bp (0.21%)
+## Building greylist: reads/Chr18_MCF7_input.bam
+## coverage: 106495 bp (0.14%)
+## Building greylist: reads/Chr18_T47D_input.bam
+## coverage: 56832 bp (0.07%)
+## Building greylist: reads/Chr18_TAMR_input.bam
+## coverage: 122879 bp (0.16%)
+## Building greylist: reads/Chr18_ZR75_input.bam
+## coverage: 72704 bp (0.09%)
+## BT474c: 58 ranges, 166912 bases
+## MCF7c: 14 ranges, 106495 bases
+## T47Dc: 11 ranges, 56832 bases
+## TAMRc: 10 ranges, 122879 bases
+## ZR75c: 15 ranges, 72704 bases
+## Master greylist: 72 ranges, 255487 bases
+## Removed: 420 of 14099 intervals.
+## Removed: 52 merged (of 3795) and 50 (of 2845) consensus.
+```
 
-To save time, greylists for the example data set are included,
+**To save time**, greylists for the example data set are included,
 and we can apply them directly:
 
 ```{r loadgrey}
@@ -277,16 +375,20 @@ names(tamoxifen.greylist$controls)
 
 Now we can apply it:
 
-```{r applygrey}
-tam.peaks <- dba.blacklist(tam.peaks, blacklist=DBA_BLACKLIST_HG19,
-                           greylist=tamoxifen.greylist)
+```{r applygrey, collapse=TRUE}
+tam.peaks <- dba.blacklist(tam.peaks, greylist=tamoxifen.greylist)
 ```
 
 The greylist results in 52 merged peaks being filtered out 
 (50 in the at-least-two-sample consensus), 
 representing some 420 of the originally supplied peaks.
 
-## Consensus peaks sets and counting reads
+<br><br><br><br>
+
+
+# Consensus peaks sets and counting reads
+
+<br>
 
 The central vehicle for conducting a quantitative analysis is a *binding matrix*,
 with rows representing genomic intervals, columns representing samples, 
@@ -294,7 +396,7 @@ and values representing overlapping read counts (similar to an expression matrix
 in RNA-seq). 
 To compute this, we need to define the rows in the form of a *consensus peak set*.
 
-### Consensus peak set
+## Consensus peak set
 
 One straightforward way to determine the consensus peaks is to consider
 genomic intervals that are identified as peaks in one or more of the samples.
@@ -327,20 +429,27 @@ consensus.peaks <- dba.peakset(tam.peaks, bRetrieve=TRUE)
 consensus.peaks[,0]
 ```
 
-### Counting overlapping reads
+## Counting overlapping reads
 
 The next step is to form the binding matrix using the consensus peak and
 computing overlapping read counts for each peak in each sample,
 *whether or not it was called as a peak in that sample.*
 
 The function used to accomplish this is `dba.count()`:
+*NB: This is a compute-intensive step that takes too long to run in the workshop*
+*Docker instance;* **do not run the following chunk** *if you are using the*
+*workshop Docker image*:
 
 ```{r count, eval=FALSE}
 tam.counts <- dba.count(tam.peaks)
 ```
+```{r countout, eval=FALSE}
+## Computing summits...
+## Re-centering peaks...
+## Reads will be counted as Single-end.
+```
 
-NB: this call may take some time. You can, alternatively,
-obtain the results as follows:
+You can, alternatively, obtain the results as follows:
 ```{r loadcounts}
 data(tamoxifen_counts)
 tam.counts <- tamoxifen
@@ -429,7 +538,7 @@ which makes minimal assumptions about the data and seeks to "do no harm".
 
 First let's make an MA plot of the date before normalization.
 An MA plot shows how the fold changes between conditions are distributed
-as the mean concdntration of reads counts increases.
+as the mean concentration of reads counts increases.
 For this plot, we'll compare use the sample sin the `Responsive`condition 
 as the baseline, and see how the samples in the
 `Resistant`condition compare.
@@ -463,7 +572,7 @@ dba.plotMA(tam.counts, sub="Normalized (Default)",
                          Responsive=tam.counts$masks$Responsive))
 ```
 
-Compared to the non-normalized data, the fold changes are somewhat mnore balanced
+Compared to the non-normalized data, the fold changes are somewhat more balanced
 and moved closer to the central 0-fold line, although the loess fit
 shows there is still a bias towards greater enrichment in the 
 `Responsive` condition.
@@ -472,24 +581,32 @@ We will consider normalization in more depth after modeling the data,
 as it is useful to consider
 the impact of normalization on the modeling results.
 
-## Modeling and testing
+<br><br><br><br>
+
+
+# Modeling and testing
+
+<br>
 
 The core differential analysis in `DiffBind`is performed by one or
-more underlying read count modeling Bioconductor packges.
+more underlying read count modeling Bioconductor packages.
 The default package is `DESeq2` [@Love2014]; 
 the `edgeR` package [@Robinson:2010p249] may be also used either as an
 alternative or in parallel.
 These packages, developed for modeling RNA-seq read counts, enable GLMs
 to be fit.
 
-### Default model
+## Default model
 
 The `DiffBind` function `dba.contrast()` is used to specify the model
 and establish contrasts to be tested against the model.
-A default model and contrasts(s) can easily be established:
+A default model and contrasts(s) can easily be established
+(note we explicitly specify that the baseline 
+Condition should be `Responsive`):
 
 ```{r modeldef}
-tam.model <- dba.contrast(tam.counts)
+tam.model <- dba.contrast(tam.counts,
+                          reorderMeta=list(Condition="Responsive"))
 tam.model
 ```
 
@@ -501,12 +618,12 @@ and a contrast comparing `Resistant` samples against the `Responsive` samples,
 with four samples in the `Resistant` condition 
 and seven samples in the `Responsive` condition.
 
-### Fitting and testing
+## Fitting and testing
 
 With the design formula in place, and a contrast established,
 the model can be fit with `DESeq2` and tests applied for the contrast:
 
-```{r analyze}
+```{r analyze, collapse=TRUE}
 tam.model <- dba.analyze(tam.model)
 dba.show(tam.model,bContrasts=TRUE)
 ```
@@ -515,13 +632,18 @@ At the default threshold of `FDR < 0.05`,
 some `r dba.show(tam.model,bContrasts=TRUE)$DB.DESeq2`
 sites are identified as being differentially bound.
 
-## Examining analysis results
+<br><br><br><br>
+
+
+# Examining analysis results
+
+<br>
 
 After conducting an analysis, the results can be examined
 in a number of ways, including obtaining a report with the
 differential sites, as well as some useful plots.
 
-### Reporting: obtaining differential sites
+## Reporting: obtaining differential sites
 
 The differential sites may be retrieved as a `GRanges` object:
 
@@ -554,7 +676,7 @@ sum(tam.db$Fold<0)
 The report object can now be used for downstream analysis,
 such as motif analysis, annotation to genomic features, etc.
 
-### Plotting: MA plot
+## Plotting: MA plot
 
 After an analysis, it is useful to generate an MA plot
 with the differential sites superimposed:
@@ -563,17 +685,17 @@ with the differential sites superimposed:
 dba.plotMA(tam.model)
 ```
 
-### Plotting: Volcano plot
+## Plotting: Volcano plot
 
 Similar to an MA plot, a volcano plot shows the log fold change 
-(on the X-axis instead fo the Y-axis), compared to the
+(on the X-axis instead of the Y-axis), compared to the
 inverse of the FDR on the Y-axis, to show how FDR and LFC are related:
 
 ```{r volcano}
 dba.plotVolcano(tam.model)
 ```
 
-### Plotting: Clustering correlation heatmap
+## Plotting: Clustering correlation heatmap
 
 We can also re-visit the clustering plots we originally did
 on the full binding matrix, except this time only
@@ -586,7 +708,7 @@ plot(tam.model, contrast=1)
 As we would hope, the differential sites separate the samples
 into two clusters, one `Resistant` and one `Responsive`.  
 
-### Plotting: PCA plot
+## Plotting: PCA plot
 
 Likewise, a PCA plot based only on the differential sites
 shows how the samples can be separated by condition:
@@ -595,7 +717,7 @@ shows how the samples can be separated by condition:
 dba.plotPCA(tam.model, contrast=1, label=DBA_TISSUE)
 ```
 
-### Plotting: Read concentration heatmap
+## Plotting: Read concentration heatmap
 
 In addition to the correlation heatmap, a plot showing
 the read concentrations can also be generated. 
@@ -603,13 +725,18 @@ In this case we scale the read concentrations
 for each site, to emphasize the difference
 between the lowest and highest values:
 
-```{r hmcontrast}
+```{r hmcontrast, fig.height=7}
 hmap <- colorRampPalette(c("red", "black", "green"))(n = 13)
 readscores <- dba.plotHeatmap(tam.model, contrast=1, correlations=FALSE,
                               scale="row", colScheme = hmap)
 ```
 
-## Multi-factor design
+<br><br><br><br>
+
+
+# Multi-factor design
+
+<br>
 
 The default design and contrasts may not be the correct ones,
 as they may not be focused on the factors of interest.
@@ -622,10 +749,16 @@ is used across conditions.
 In the current case, we will change the model to the
 "correct" multi-factor design before proceeding:
 
-```{r modelmulti}
+```{r modelmulticon, collapse=TRUE}
 tam.model <- dba.contrast(tam.model, design="~Tissue + Condition")
+```
+```{r modelmultishow, collapse=TRUE}
 dba.show(tam.model,bDesign=TRUE)
+```
+```{r modelmultianal, collapse=TRUE}
 tam.model <- dba.analyze(tam.model)
+```
+```{r modelmultifinal, collapse=TRUE}
 tam.model
 ```
 
@@ -640,5 +773,192 @@ loss of binding the in `Resistant` condition:
 dba.plotMA(tam.model, contrast=1)
 ```
 
+<br><br><br><br>
 
-## References
+# Normalization discussion
+
+<br>
+
+Normalization of experimental data is particularly important in ChIP-seq
+(and ATAC-seq) analysis, and may require more careful consideration than
+needed for RNA-seq analysis. 
+This is because the range of ChIP-seq experiments covers more
+cases than RNA-seq, which usually involve a similar set of possible
+expressed genes and/or transcripts, many of which are not
+expected to significantly change expression.
+ChIP, ATAC, and similar enrichment-based sequencing data may
+not follow the assumptions inherent in popular methods for normalizing
+RNA-seq data, as well as exhibiting different types
+of efficiency and other biases.
+
+## Core normalization methods
+
+The default normalization method in `DiffBind` is to look only
+at the relative library sizes (number of aligned reads) 
+of the experimental samples.
+Why don't we use the underlying analysis methods inherent in
+the `DESeq2` (RLE) and `edgeR` (TMM) differential analysis packages?
+
+Consider the sample experiment. 
+We saw in the first two MA plots that there was a bias towards greater
+read concentration in the `Responsive` condition; 
+this was reduced somewhat, but still remained, after library-size
+normalization, and the  analysis identified
+more differential sites that gained binding in the `Responsive` condition
+(also seen as binding loss in the `Responsive` condition:)
+
+```{r norm2maplots1} 
+dba.plotMA(tam.model,bNormalized=FALSE, th=0, sub="Non-Normalized")
+dba.plotMA(tam.model,bNormalized=TRUE, sub="Normalized: Library Size")
+```
+
+Let's see what happens if we normalizing using the "native" 
+method in `DESeq2`, RLE:
+
+```{r normRLERiP, collapse=TRUE} 
+tam.model <- dba.normalize(tam.model, normalize="RLE")
+tam.model <- dba.analyze(tam.model)
+dba.plotMA(tam.model,bNormalized=TRUE, sub="Normalized: RLE [RiP]")
+```
+
+The result is quite different!
+The read concentrations are closely balanced and fit near the 
+zero log fold change line. 
+The differential sites are also more balance between those losing
+and gaining affinity in the `Resistant` condition:
+
+```{r normgainloss} 
+rep <- dba.report(tam.model)
+sum(rep$Fold < 0)
+sum(rep$Fold > 0)
+```
+
+What accounts for the difference? 
+Which is the "correct" analysis?
+
+## Reference reads
+
+It turns out that for the type of data we are dealing with in
+DNA enrichment assays, the reads that are used as the reference
+for normalizing are more important that the  normalization method itself.
+While in RNA-seq experiments the expression matrix can be normalized
+directly, based on the reads that uniquely overlap genes or transcripts
+(known as "Reads-in-Peaks", or "RiP"),
+this does not apply to a binding matrix based on a consensus peakset.
+
+In a non-peak bases analysis such as is done using 
+the `csaw` package[@lun2016csaw],
+where there is no consensus binding matrix, this issue
+was addressed by using a large "bins" of reads across the genome.
+The idea is that the bins, being so much larger in size than
+binding sites or stretches of open chromatin, contain mostly
+"background" reads, and present a less biased way of providing
+a read count matrix on which to base normalization calculations.
+This "background" method is included in `DiffBind`
+*NB: This is a compute-intensive step, however if you have loaded the*
+*pre-computed counts, these already include the background reads*
+*so this operation may be safely run*:
+
+```{r normbackground, eval=TRUE}
+tam.model <- dba.normalize(tam.model, normalize="RLE",
+                           background=TRUE)
+```
+```{r normRLbackground, collapse=TRUE} 
+tam.model <- dba.analyze(tam.model)
+dba.plotMA(tam.model,bNormalized=TRUE, sub="Normalized: RLE [Background]")
+```
+
+This yields result that more closely match those obtained using
+the default library-size based normalization.
+
+## Comparison of normalization and reference reads methods
+
+It is interesting to compare the impact of six different normalization schemes:
+
+1. Library size normalization based on total aligned reads (`lib_full`)
+2. Library size normalization based on Reads in Peaks (`lib_RiP`)
+3. RLE (native to `DESeq2`) normalization based on Reads in Peaks (`RLE_RiP`)
+4. RLE (native to `DESeq2`) normalization based on background bins (`RLE_BG`)
+5. TMM (native to `edgeR`) normalization based on Reads in Peaks (`TMM_RiP`)
+6. TMM (native to `edgeR`) normalization based on background bins (`TMM_BG`)
+
+There is an R script in the `inst/scripts` directory 
+called `compare_norm.R`, that performs
+all six of the normalization schemes, performs a `DESeq2` analysis on each,
+and collects the differential sites into a report-based DBA object
+that can be loaded as follows:
+
+```{r loadcompnorm, collapse=TRUE }
+norm.comp <- dba.load("norm_comp")
+norm.comp
+```
+
+We can look at the differences in a couple of ways.
+One is to consider how closely correlated are the resulting differential sites:
+
+```{r normcorplot, fig.height=7}
+cor <- dba.plotHeatmap(norm.comp)
+```
+
+This shows how the results cluster.
+While all the analysis have a core sets of sites in common 
+(the lowest correlation between analyses is `r min(cor)`,
+there are two distinct clusters driven not by the normalization methods,
+but by the choice of reference reads.
+One cluster uses *all* the reads 
+(background bins `BG` or full library size `full`),
+while the other cluster normalizes based only on reads in the
+binding matrix (`RiP`).
+The least important difference is the choice of normalization methods:
+`edgeR`'s TMM method and `DESeq2`'s RLE method produce essentially
+the same results when using the same reference reads.
+
+Next we can look at differences in the differential sites themselves
+by plotting a heatmap of the log fold changes (LFC) of each site:
+```{r normheatmap, fig.height=7}
+hmap <- colorRampPalette(c("red", "black", "green"))(n = 7)
+dba.plotHeatmap(norm.comp, correlations=FALSE, 
+                bLog=FALSE, colScheme=hmap, 
+                minval=-4, maxval=4,
+                key.title = "LFC", main = "DESeq2 Differentially Bound Sites")
+```
+
+Sites in green are ones that Gain binding intensity in the `Resistant` condition,
+while those in red lose binding intensity.
+Sites in black are ones that are not identified in a specific analysis.
+This plot again shows how the analyses cluster first by
+the choice of reference reads, but also shows how the balance of sites
+changes, with one cluster identifying mostly Loss (red)
+sites, and the other `RiP` cluster identifying many more Gain sites.
+
+The biological conclusions one might reach could be quite different
+depending on which normalization scheme is chosen.
+
+## Spike-ins and parallel factors 
+
+While it is beyond the scope of this workshop, it is worth nothing
+that alternative sets of reference reads can be used.
+`DiffBind` supports the use of spike-ins, where the reads
+used to normalize the libraries are based on those aligned
+to exogenous chromatin  (eg. from *Drosophila melanogaster*), 
+or are identified as peaks associated with a factor or mark
+that is known to not change under the experimental conditions.
+See the `DiffBind` vignette, and help page for `dba.normalize()`,
+for guidance on how to perform such normalization.
+
+<br><br><br><br>
+
+# Sneak peak: Profile Plots (coming in `DiffBind 3.2`)
+
+![Profile Heatmap for MCF7 samples](mcf7_profiles.png)
+
+<br><br><br><br>
+
+# sessionInfo()
+```{r sessioinfo, collapse=TRUE}
+sessionInfo()
+```
+
+<br><br><br><br>
+
+#References

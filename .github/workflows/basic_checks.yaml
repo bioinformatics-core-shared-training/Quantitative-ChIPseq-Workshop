@@ -45,8 +45,8 @@ jobs:
           wget https://content.cruk.cam.ac.uk/bioinformatics/software/DiffBind/DiffBind_vignette_data.tar.gz
           tar --warning=no-unknown-keyword -xzf DiffBind_vignette_data.tar.gz
           rm DiffBind_vignette_data.tar.gz
-          rm -rf inst/extdata
-          mv DiffBind_Vignette/ inst/extdata/
+          mv DiffBind_Vignette/reads inst/extdata/reads
+          mv DiffBind_Vignette/peaks inst/extdata/peaks
           ls -lR inst
           
       - name: Check
