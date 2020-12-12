@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">QuantitativeChIPseqWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
       <h1 data-toc-skip>Workshop: Quantitative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays</h1>
                         <h4 class="author">Rory Stark</h4>
             <address class="author_afil">
-      Cancer Research UK Cambridge Institute, University of Cambridge, Cambridge, UK<br><h4 class="date">December 07, 2020</h4>
+      Cancer Research UK Cambridge Institute, University of Cambridge, Cambridge, UK<br><h4 class="date">December 12, 2020</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/blob/master/vignettes/Quantitative-ChIPseq-Workshop.Rmd"><code>vignettes/Quantitative-ChIPseq-Workshop.Rmd</code></a></small>
       <div class="hidden name"><code>Quantitative-ChIPseq-Workshop.Rmd</code></div>
@@ -112,119 +112,88 @@
   text-align: center;
 }
 </style>
-<div id="quantitative-analysis-of-chip-seq-atac-seq-and-related-dna-enrichment-assays" class="section level1">
+<p><br><br><br><br></p>
+<div id="workshop-participation" class="section level1">
 <h1 class="hasAnchor">
-<a href="#quantitative-analysis-of-chip-seq-atac-seq-and-related-dna-enrichment-assays" class="anchor"></a>Quantitative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays</h1>
-<div id="workshop-participation" class="section level2">
+<a href="#workshop-participation" class="anchor"></a>Workshop participation</h1>
+<p><br></p>
+<p>Instructions on how to run and follow along during the workshop.</p>
+<div id="workshop-participation-local-docker-image" class="section level2">
 <h2 class="hasAnchor">
-<a href="#workshop-participation" class="anchor"></a>Workshop participation</h2>
-<p>Docker users can run this workshop locally via:</p>
-<pre><code>docker run -e PASSWORD=DiffBind -p 8787:8787 crukcibioinformatics/quantitative_chip_workshop:latest</code></pre>
+<a href="#workshop-participation-local-docker-image" class="anchor"></a>Workshop participation – local Docker image</h2>
+<p>If you <strong>not</strong> are already logged into an RStudio instance provided by the conference organizers, and you have a Docker client installed on your machine, you run this workshop locally via:</p>
+<pre><code>docker pull crukcibioinformatics/quantitative_chip_workshop:latest
+docker images
+docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <p>Then open a browser and go to the URL <strong>localhost:8787</strong>. Log into RStudio with <strong>username:rstudio</strong> and <strong>password:DiffBind</strong>.</p>
+<p><strong>NOTE</strong>: <em>The workshop Docker instance does not have much compute power.</em> <em>As a result, it is not possible to run all the code in the time allowed.</em> <em>Two operations are affected: building greylists, and counting reads.</em> <em>In these cases, the workshop includes pre-computed data objects that</em> <em>can be loaded to avoid the time-consuming code.</em> <em>This is noted inline.</em></p>
 </div>
-<div id="requirements-rbioconductor-packages" class="section level2">
+<div id="workshop-participation-local-r-installation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#requirements-rbioconductor-packages" class="anchor"></a>Requirements: R/Bioconductor packages</h2>
+<a href="#workshop-participation-local-r-installation" class="anchor"></a>Workshop participation – local R installation</h2>
 <p>The workshop uses a Docker container with Bioconductor Release version <code>3.12</code>. If you would like to install Bioconductor on your computer <strong>at a later date</strong>, see the <a href="https://www.bioconductor.org/install">Bioconductor installation</a> instructions.</p>
 <p>Here is a list of packages that we will be using:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.cruk.cam.ac.uk/core-facilities/bioinformatics-core/software/diffbind">DiffBind</a></span><span class="op">)</span></code></pre></div>
-<pre><code>## Loading required package: GenomicRanges</code></pre>
-<pre><code>## Loading required package: stats4</code></pre>
-<pre><code>## Loading required package: BiocGenerics</code></pre>
-<pre><code>## Loading required package: parallel</code></pre>
-<pre><code>## 
-## Attaching package: 'BiocGenerics'</code></pre>
-<pre><code>## The following objects are masked from 'package:parallel':
-## 
-##     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
-##     clusterExport, clusterMap, parApply, parCapply, parLapply,
-##     parLapplyLB, parRapply, parSapply, parSapplyLB</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     IQR, mad, sd, var, xtabs</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     anyDuplicated, append, as.data.frame, basename, cbind, colnames,
-##     dirname, do.call, duplicated, eval, evalq, Filter, Find, get, grep,
-##     grepl, intersect, is.unsorted, lapply, Map, mapply, match, mget,
-##     order, paste, pmax, pmax.int, pmin, pmin.int, Position, rank,
-##     rbind, Reduce, rownames, sapply, setdiff, sort, table, tapply,
-##     union, unique, unsplit, which.max, which.min</code></pre>
-<pre><code>## Loading required package: S4Vectors</code></pre>
-<pre><code>## 
-## Attaching package: 'S4Vectors'</code></pre>
-<pre><code>## The following object is masked from 'package:base':
-## 
-##     expand.grid</code></pre>
-<pre><code>## Loading required package: IRanges</code></pre>
-<pre><code>## Loading required package: GenomeInfoDb</code></pre>
-<pre><code>## Loading required package: SummarizedExperiment</code></pre>
-<pre><code>## Loading required package: MatrixGenerics</code></pre>
-<pre><code>## Loading required package: matrixStats</code></pre>
-<pre><code>## 
-## Attaching package: 'MatrixGenerics'</code></pre>
-<pre><code>## The following objects are masked from 'package:matrixStats':
-## 
-##     colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
-##     colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
-##     colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
-##     colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
-##     colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
-##     colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
-##     colWeightedMeans, colWeightedMedians, colWeightedSds,
-##     colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
-##     rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
-##     rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
-##     rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
-##     rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
-##     rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
-##     rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
-##     rowWeightedSds, rowWeightedVars</code></pre>
-<pre><code>## Loading required package: Biobase</code></pre>
-<pre><code>## Welcome to Bioconductor
-## 
-##     Vignettes contain introductory material; view with
-##     'browseVignettes()'. To cite Bioconductor, see
-##     'citation("Biobase")', and for packages 'citation("pkgname")'.</code></pre>
-<pre><code>## 
-## Attaching package: 'Biobase'</code></pre>
-<pre><code>## The following object is masked from 'package:MatrixGenerics':
-## 
-##     rowMedians</code></pre>
-<pre><code>## The following objects are masked from 'package:matrixStats':
-## 
-##     anyMissing, rowMedians</code></pre>
-<pre><code>## </code></pre>
-<pre><code>##  &gt;&gt;&gt; DiffBind 3.0 includes substantial updates. See ?DiffBind3 for details on what has changed.</code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">GreyListChIP</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.cruk.cam.ac.uk/core-facilities/bioinformatics-core/software/diffbind">DiffBind</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">GreyListChIP</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">csaw</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="introduction" class="section level2">
+<div id="how-to-follow-the-workshop" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h2>
+<a href="#how-to-follow-the-workshop" class="anchor"></a>How to follow the workshop</h2>
+<p>First load the workshop package:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop">QuantitativeChIPseqWorkshop</a></span><span class="op">)</span></code></pre></div>
+<p>There are a number of ways to follow the workshop:</p>
+<div id="follow-the-workshop-in-the-pre-built-html-in-rstudio" class="section level3">
+<h3 class="hasAnchor">
+<a href="#follow-the-workshop-in-the-pre-built-html-in-rstudio" class="anchor"></a>Follow the workshop in the pre-built HTML in RStudio</h3>
+<p>You can open the fully built workshop (with all code and results) in the “Help” pane in RStudio as follows:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html">vignette</a></span><span class="op">(</span><span class="st">"Quantitative-ChIPseq-Workshop"</span>,<span class="st">"QuantitativeChIPseqWorkshop"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="follow-the-workshop-in-the-pre-built-html-in-a-searate-browser-window-or-tab" class="section level3">
+<h3 class="hasAnchor">
+<a href="#follow-the-workshop-in-the-pre-built-html-in-a-searate-browser-window-or-tab" class="anchor"></a>Follow the workshop in the pre-built HTML in a searate Browser window or tab</h3>
+<p>If you are using the Docker image, You can open the fully built workshop (with all code and results) in a browser tab as follows:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rstudioapi/man/viewer.html">viewer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"doc"</span>,
+                                     package<span class="op">=</span><span class="st">"QuantitativeChIPseqWorkshop"</span><span class="op">)</span>,
+                         <span class="st">"Quantitative-ChIPseq-Workshop.html"</span>, sep<span class="op">=</span><span class="st">"/"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>It may be helpful to move the tab into its own window so you can see the vignette and the RStudio window at the same time.</p>
+</div>
+<div id="follow-the-workshop-directly-in-the-workshop-mark-down-file" class="section level3">
+<h3 class="hasAnchor">
+<a href="#follow-the-workshop-directly-in-the-workshop-mark-down-file" class="anchor"></a>Follow the workshop directly in the workshop mark-down file</h3>
+<p>You can open the workshop “source” .Rmd file in the RStudio “Source” pane, and follow along, executing each code chunk in sequence, to build it as you go.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html">file.edit</a></span><span class="op">(</span><span class="st">"vignettes/Quantitative-ChIPseq-Workshop.Rmd"</span><span class="op">)</span></code></pre></div>
+</div>
 <div id="set-directory-to-where-the-data-are" class="section level3">
 <h3 class="hasAnchor">
 <a href="#set-directory-to-where-the-data-are" class="anchor"></a>Set directory to where the data are</h3>
 <p>First make sure your current working directory is correct:</p>
 <pre><code>## [1] "/__w/Quantitative-ChIPseq-Workshop/Quantitative-ChIPseq-Workshop/inst/extdata"</code></pre>
 <p>The directory should be <code>"/home/rstudio/inst/extdata"</code>. If it is not, change the working directory:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/getwd.html">setwd</a></span><span class="op">(</span><span class="st">"inst/extdata"</span><span class="op">)</span></code></pre></div>
+<p><br><br><br><br></p>
 </div>
 </div>
-<div id="loading-an-experiment-into-diffbind" class="section level2">
-<h2 class="hasAnchor">
+</div>
+<div id="loading-an-experiment-into-diffbind" class="section level1">
+<h1 class="hasAnchor">
 <a href="#loading-an-experiment-into-diffbind" class="anchor"></a>Loading an experiment into <code>DiffBind</code>
-</h2>
-<div id="what-do-you-need-to-do-a-quantitiative-analysis-of-an-experiment" class="section level3">
-<h3 class="hasAnchor">
-<a href="#what-do-you-need-to-do-a-quantitiative-analysis-of-an-experiment" class="anchor"></a>What do you need to do a quantitiative analysis of an experiment?</h3>
+</h1>
+<p><br></p>
+<p>The first step in a quantitative analysis is setting up the experiment so that <code>DiffBind</code> has all the information it needs. For many project, this can be the most time-consuming step!</p>
+<div id="what-do-you-need-to-do-a-quantitiative-analysis-of-an-experiment" class="section level2">
+<h2 class="hasAnchor">
+<a href="#what-do-you-need-to-do-a-quantitiative-analysis-of-an-experiment" class="anchor"></a>What do you need to do a quantitiative analysis of an experiment?</h2>
 <p>In order to run an quantitative analysis, all the experimental data must be ready. This includes three types of data:</p>
-<div id="sample-metadata" class="section level4">
-<h4 class="hasAnchor">
-<a href="#sample-metadata" class="anchor"></a>Sample metadata</h4>
+<div id="sample-metadata" class="section level3">
+<h3 class="hasAnchor">
+<a href="#sample-metadata" class="anchor"></a>Sample metadata</h3>
 <p>An experiment is based on a number of <strong>samples</strong>. Each sample needs a unique <strong>SampleID</strong>. A comparative analysis requires that the samples are associated with at least two classes that can be compared. The classes the samples belong to are indicated by associated samples <em>metadata</em>, which can include:</p>
 <ul>
 <li>
@@ -239,9 +208,9 @@
 <p>Note that not all of these are required, but there should be at least one metadata factor to divide the samples into classes.</p>
 <p>Finally it is imperative that the experimental classes be represented by <strong>Replicate</strong> samples. <em>It is not possible to perform a meaningful quantitative analysis without replicated data to capture variance.</em> Generally a minimum of three replicates are required to obtain meaningful results.</p>
 </div>
-<div id="aligned-sequencing-read-data" class="section level4">
-<h4 class="hasAnchor">
-<a href="#aligned-sequencing-read-data" class="anchor"></a>Aligned sequencing read data</h4>
+<div id="aligned-sequencing-read-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#aligned-sequencing-read-data" class="anchor"></a>Aligned sequencing read data</h3>
 <p>The second type of data needed for an analysis are aligned sequencing reads, generally in the form of ‘.bam’ files. Each sample needs an aligned sequencing library, but may include the following:</p>
 <ul>
 <li>
@@ -252,18 +221,18 @@
 <strong>SpikeIn</strong> - an option set of spike-in reads for normalization.</li>
 </ul>
 </div>
-<div id="called-peaks" class="section level4">
-<h4 class="hasAnchor">
-<a href="#called-peaks" class="anchor"></a>Called peaks</h4>
+<div id="called-peaks" class="section level3">
+<h3 class="hasAnchor">
+<a href="#called-peaks" class="anchor"></a>Called peaks</h3>
 <p>The type of analysis we are discussing today requires that a peak caller (such as <strong>MACS</strong>) has been used on the aligned reads to call peaks. While having called peaks for the sample is useful in a variety of ways, it is possible to perform a quantitative analysis without using called peaks. For example, in some cases, the regions of interest may be known in advance (such as a list known gene promoters). An alternative is to perform a quantitative analysis using windows that cover the entire genome. The <code>csaw</code> package <span class="citation">(Lun and Smyth 2016)</span> provides a tool to perform such an analysis.</p>
 </div>
 </div>
-<div id="making-a-samplesheet" class="section level3">
-<h3 class="hasAnchor">
-<a href="#making-a-samplesheet" class="anchor"></a>Making a samplesheet</h3>
+<div id="making-a-samplesheet" class="section level2">
+<h2 class="hasAnchor">
+<a href="#making-a-samplesheet" class="anchor"></a>Making a samplesheet</h2>
 <p>The easiest way to set up an experiment for analysis in <code>DiffBind</code>is to use a <em>sample sheet</em>. This can take the form of a <code>.csv</code> file, or a <code>dataframe</code>.</p>
 <p>We can read in the sample sheet provided for the example data set:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"tamoxifen.csv"</span><span class="op">)</span>
 <span class="va">samples</span></code></pre></div>
 <pre><code>##    SampleID Tissue Factor  Condition  Treatment Replicate
@@ -306,27 +275,30 @@
 <p>There are seven replicates of <code>Responsive</code> samples, encompassing three different cell lines, with two or three replicates for each <code>Responsive</code>cell line. There are four replicates of <code>Resistant</code> samples in two cell lines, each with two replicates. For each sample we have a set of aligned reads (note that only reads aligned to chromosome 18 are included to speed up the example analysis), and an Input control is available for each cell line/condition combination.</p>
 <p>Peaks are included in <code>.bed</code> format (they were originally called using <code>MACS</code> <span class="citation">(Zhang et al. 2008)</span>.)</p>
 </div>
-<div id="loading-the-experiment-into-diffbind" class="section level3">
-<h3 class="hasAnchor">
+<div id="loading-the-experiment-into-diffbind" class="section level2">
+<h2 class="hasAnchor">
 <a href="#loading-the-experiment-into-diffbind" class="anchor"></a>Loading the experiment into <code>DiffBind</code>
-</h3>
-<p>At this point a complete default end-to-end analysis could be run using a single command: <code>result &lt;- dba(samples)</code>. Instead, we are going to walk through each of the steps of the analysis one at a time.</p>
+</h2>
+<p>At this point a complete default end-to-end analysis could be run using a single command (<strong>Do not run this code during the workshop!</strong>):</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.html">dba</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
+<p>Instead, we are going to walk through each of the steps of the analysis one at a time.</p>
 <p>First load the experiment into <code>DiffBind</code> either by supplying the original <code>.csv</code> file or using the loaded <code>samples</code> dataframe:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.html">dba</a></span><span class="op">(</span>sampleSheet<span class="op">=</span><span class="st">"tamoxifen.csv"</span><span class="op">)</span></code></pre></div>
-<pre><code>## BT4741 BT474 ER Resistant Full-Media 1 bed</code></pre>
-<pre><code>## BT4742 BT474 ER Resistant Full-Media 2 bed</code></pre>
-<pre><code>## MCF71 MCF7 ER Responsive Full-Media 1 bed</code></pre>
-<pre><code>## MCF72 MCF7 ER Responsive Full-Media 2 bed</code></pre>
-<pre><code>## MCF73 MCF7 ER Responsive Full-Media 3 bed</code></pre>
-<pre><code>## T47D1 T47D ER Responsive Full-Media 1 bed</code></pre>
-<pre><code>## T47D2 T47D ER Responsive Full-Media 2 bed</code></pre>
-<pre><code>## MCF7r1 MCF7 ER Resistant Full-Media 1 bed</code></pre>
-<pre><code>## MCF7r2 MCF7 ER Resistant Full-Media 2 bed</code></pre>
-<pre><code>## ZR751 ZR75 ER Responsive Full-Media 1 bed</code></pre>
-<pre><code>## ZR752 ZR75 ER Responsive Full-Media 2 bed</code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.html">dba</a></span><span class="op">(</span>sampleSheet<span class="op">=</span><span class="st">"tamoxifen.csv"</span><span class="op">)</span>
+<span class="co">## BT4741 BT474 ER Resistant Full-Media 1 bed</span>
+<span class="co">## BT4742 BT474 ER Resistant Full-Media 2 bed</span>
+<span class="co">## MCF71 MCF7 ER Responsive Full-Media 1 bed</span>
+<span class="co">## MCF72 MCF7 ER Responsive Full-Media 2 bed</span>
+<span class="co">## MCF73 MCF7 ER Responsive Full-Media 3 bed</span>
+<span class="co">## T47D1 T47D ER Responsive Full-Media 1 bed</span>
+<span class="co">## T47D2 T47D ER Responsive Full-Media 2 bed</span>
+<span class="co">## MCF7r1 MCF7 ER Resistant Full-Media 1 bed</span>
+<span class="co">## MCF7r2 MCF7 ER Resistant Full-Media 2 bed</span>
+<span class="co">## ZR751 ZR75 ER Responsive Full-Media 1 bed</span>
+<span class="co">## ZR752 ZR75 ER Responsive Full-Media 2 bed</span></code></pre></div>
 <p>This creates a <code>DBA</code> object we’ve called <code>tam.peaks</code>, which can be examined:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.peaks</span></code></pre></div>
 <pre><code>## 11 Samples, 2845 sites in matrix (3795 total):
 ##        ID Tissue Factor  Condition  Treatment Replicate Intervals
@@ -342,52 +314,77 @@
 ## 10  ZR751   ZR75     ER Responsive Full-Media         1      2346
 ## 11  ZR752   ZR75     ER Responsive Full-Media         2      2345</code></pre>
 <p>This shows the metadata for the 11 samples, along with how many called peaks were included for each. After loading, overlapping peaks are merged; there are a total of 3,795 unique regions specified, with 2,845 of them overlapping peaks called in at least two samples.</p>
+<p><br><br><br><br></p>
 </div>
 </div>
-<div id="blacklists-and-greylists" class="section level2">
-<h2 class="hasAnchor">
-<a href="#blacklists-and-greylists" class="anchor"></a>Blacklists and greylists</h2>
+<div id="blacklists-and-greylists" class="section level1">
+<h1 class="hasAnchor">
+<a href="#blacklists-and-greylists" class="anchor"></a>Blacklists and greylists</h1>
+<p><br></p>
 <p>Now that the peaks are loaded, it is good practice to filter out peaks called in problematic regions. This is accomplished using a standard, published <code>Blacklist</code> of areas in in reference genome known to be problematic. The best known lists have been identified as part of the ENCODE project <span class="citation">(Amemiya, Kundaje, and Boyle 2019)</span> and are available for a variety of reference genomes and genome versions. The current ENCODE blacklists are available through the <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist()</a></code> function.</p>
 <p>In addition, if control alignments are available for an experiment, experiment-specific exclusion lists can be generated reflecting the tissue and experimental conditions used. We call these <code>Greylists</code> and are generated using the <code>GreyListChIP</code>package <span class="citation">(Brown 2015)</span>. The idea is to analyze libraries that are not meant to show systematic enrichment (such as Inputs, in which no anti-body is introduced), and identify anomalous regions where a disproportionate degree of signal is present.</p>
-<div id="applying-a-blacklist" class="section level3">
-<h3 class="hasAnchor">
-<a href="#applying-a-blacklist" class="anchor"></a>Applying a blacklist</h3>
+<div id="applying-a-blacklist" class="section level2">
+<h2 class="hasAnchor">
+<a href="#applying-a-blacklist" class="anchor"></a>Applying a blacklist</h2>
 <p>If an ENCODE blacklists exists for the reference genome used to align the experimental data, it can be applied automatically using the <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist()</a></code> function. The reference genome is automatically detected from the supplied <code>.bam</code> files.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span>, blacklist<span class="op">=</span><span class="cn">TRUE</span>, greylist<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<pre><code>## Genome detected: Hsapiens.UCSC.hg19</code></pre>
-<pre><code>## Applying blacklist...</code></pre>
-<pre><code>## Removed: 3 of 14102 intervals.</code></pre>
-<pre><code>## Removed: 1 merged (of 3795) and 1 (of 2845) consensus.</code></pre>
-<pre><code>## 11 Samples, 2844 sites in matrix (3794 total):
-##        ID Tissue Factor  Condition  Treatment Replicate Intervals
-## 1  BT4741  BT474     ER  Resistant Full-Media         1      1080
-## 2  BT4742  BT474     ER  Resistant Full-Media         2      1122
-## 3   MCF71   MCF7     ER Responsive Full-Media         1      1555
-## 4   MCF72   MCF7     ER Responsive Full-Media         2      1045
-## 5   MCF73   MCF7     ER Responsive Full-Media         3      1338
-## 6   T47D1   T47D     ER Responsive Full-Media         1       527
-## 7   T47D2   T47D     ER Responsive Full-Media         2       373
-## 8  MCF7r1   MCF7     ER  Resistant Full-Media         1      1438
-## 9  MCF7r2   MCF7     ER  Resistant Full-Media         2       930
-## 10  ZR751   ZR75     ER Responsive Full-Media         1      2346
-## 11  ZR752   ZR75     ER Responsive Full-Media         2      2345</code></pre>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span>, blacklist<span class="op">=</span><span class="cn">TRUE</span>, greylist<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">## Genome detected: Hsapiens.UCSC.hg19</span>
+<span class="co">## Applying blacklist...</span>
+<span class="co">## Removed: 3 of 14102 intervals.</span>
+<span class="co">## Removed: 1 merged (of 3795) and 1 (of 2845) consensus.</span>
+<span class="co">## 11 Samples, 2844 sites in matrix (3794 total):</span>
+<span class="co">##        ID Tissue Factor  Condition  Treatment Replicate Intervals</span>
+<span class="co">## 1  BT4741  BT474     ER  Resistant Full-Media         1      1080</span>
+<span class="co">## 2  BT4742  BT474     ER  Resistant Full-Media         2      1122</span>
+<span class="co">## 3   MCF71   MCF7     ER Responsive Full-Media         1      1555</span>
+<span class="co">## 4   MCF72   MCF7     ER Responsive Full-Media         2      1045</span>
+<span class="co">## 5   MCF73   MCF7     ER Responsive Full-Media         3      1338</span>
+<span class="co">## 6   T47D1   T47D     ER Responsive Full-Media         1       527</span>
+<span class="co">## 7   T47D2   T47D     ER Responsive Full-Media         2       373</span>
+<span class="co">## 8  MCF7r1   MCF7     ER  Resistant Full-Media         1      1438</span>
+<span class="co">## 9  MCF7r2   MCF7     ER  Resistant Full-Media         2       930</span>
+<span class="co">## 10  ZR751   ZR75     ER Responsive Full-Media         1      2346</span>
+<span class="co">## 11  ZR752   ZR75     ER Responsive Full-Media         2      2345</span></code></pre></div>
 <p>This shows that the blacklist filtered out one merged peak that had been called in three of the samples.</p>
 </div>
-<div id="generating-and-applying-a-greylist" class="section level3">
-<h3 class="hasAnchor">
-<a href="#generating-and-applying-a-greylist" class="anchor"></a>Generating and applying a greylist</h3>
+<div id="generating-and-applying-a-greylist" class="section level2">
+<h2 class="hasAnchor">
+<a href="#generating-and-applying-a-greylist" class="anchor"></a>Generating and applying a greylist</h2>
 <p>Greylists can be automatically generated from the controls as <code>DiffBind</code> provides an interface to the <code>GreyListChIP</code> package. This can be a time-consuming operation, as each of the controls is analyzed for anomalous regions.</p>
-<p>The blacklist can be applied, and the greylists generated and applied, in a single step:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<p>The blacklist can be applied, and the greylists generated and applied, in a single step <em>NB: This is a compute-intensive step that takes too long to run in the workshop</em> <em>Docker instance;</em> <strong>do not run the following chunk</strong> <em>if you are using the</em> <em>workshop Docker image</em>:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span><span class="op">)</span></code></pre></div>
-<p>To save time, greylists for the example data set are included, and we can apply them directly:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Genome detected: Hsapiens.UCSC.hg19</span>
+<span class="co">## Applying blacklist...</span>
+<span class="co">## Removed: 3 of 14102 intervals.</span>
+<span class="co">## Counting control reads for greylist...</span>
+<span class="co">## Building greylist: reads/Chr18_BT474_input.bam</span>
+<span class="co">## coverage: 166912 bp (0.21%)</span>
+<span class="co">## Building greylist: reads/Chr18_MCF7_input.bam</span>
+<span class="co">## coverage: 106495 bp (0.14%)</span>
+<span class="co">## Building greylist: reads/Chr18_T47D_input.bam</span>
+<span class="co">## coverage: 56832 bp (0.07%)</span>
+<span class="co">## Building greylist: reads/Chr18_TAMR_input.bam</span>
+<span class="co">## coverage: 122879 bp (0.16%)</span>
+<span class="co">## Building greylist: reads/Chr18_ZR75_input.bam</span>
+<span class="co">## coverage: 72704 bp (0.09%)</span>
+<span class="co">## BT474c: 58 ranges, 166912 bases</span>
+<span class="co">## MCF7c: 14 ranges, 106495 bases</span>
+<span class="co">## T47Dc: 11 ranges, 56832 bases</span>
+<span class="co">## TAMRc: 10 ranges, 122879 bases</span>
+<span class="co">## ZR75c: 15 ranges, 72704 bases</span>
+<span class="co">## Master greylist: 72 ranges, 255487 bases</span>
+<span class="co">## Removed: 420 of 14099 intervals.</span>
+<span class="co">## Removed: 52 merged (of 3795) and 50 (of 2845) consensus.</span></code></pre></div>
+<p><strong>To save time</strong>, greylists for the example data set are included, and we can apply them directly:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tamoxifen_greylist</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">tamoxifen.greylist</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "master"   "controls"</code></pre>
 <p>In this object, there is a “master” greylist formed from the individual greylist (computed one per control):</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tamoxifen.greylist</span><span class="op">$</span><span class="va">master</span></code></pre></div>
 <pre><code>## GRanges object with 72 ranges and 0 metadata columns:
 ##        seqnames            ranges strand
@@ -405,42 +402,43 @@
 ##   [72]    chr18 77377859-77380930      *
 ##   -------
 ##   seqinfo: 1 sequence from hg19 genome</code></pre>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">tamoxifen.greylist</span><span class="op">$</span><span class="va">controls</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "BT474c" "MCF7c"  "T47Dc"  "TAMRc"  "ZR75c"</code></pre>
 <p>Now we can apply it:</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span>, blacklist<span class="op">=</span><span class="va">DBA_BLACKLIST_HG19</span>,
-                           greylist<span class="op">=</span><span class="va">tamoxifen.greylist</span><span class="op">)</span></code></pre></div>
-<pre><code>## Genome detected: Hsapiens.UCSC.hg19</code></pre>
-<pre><code>## Applying blacklist...</code></pre>
-<pre><code>## Removed: 3 of 14102 intervals.</code></pre>
-<pre><code>## Master greylist: 72 ranges, 255487 bases</code></pre>
-<pre><code>## Removed: 420 of 14099 intervals.</code></pre>
-<pre><code>## Removed: 52 merged (of 3795) and 50 (of 2845) consensus.</code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span>, greylist<span class="op">=</span><span class="va">tamoxifen.greylist</span><span class="op">)</span>
+<span class="co">## Genome detected: Hsapiens.UCSC.hg19</span>
+<span class="co">## Applying blacklist...</span>
+<span class="co">## Removed: 3 of 14102 intervals.</span>
+<span class="co">## Master greylist: 72 ranges, 255487 bases</span>
+<span class="co">## Removed: 420 of 14099 intervals.</span>
+<span class="co">## Removed: 52 merged (of 3795) and 50 (of 2845) consensus.</span></code></pre></div>
 <p>The greylist results in 52 merged peaks being filtered out (50 in the at-least-two-sample consensus), representing some 420 of the originally supplied peaks.</p>
+<p><br><br><br><br></p>
 </div>
 </div>
-<div id="consensus-peaks-sets-and-counting-reads" class="section level2">
-<h2 class="hasAnchor">
-<a href="#consensus-peaks-sets-and-counting-reads" class="anchor"></a>Consensus peaks sets and counting reads</h2>
+<div id="consensus-peaks-sets-and-counting-reads" class="section level1">
+<h1 class="hasAnchor">
+<a href="#consensus-peaks-sets-and-counting-reads" class="anchor"></a>Consensus peaks sets and counting reads</h1>
+<p><br></p>
 <p>The central vehicle for conducting a quantitative analysis is a <em>binding matrix</em>, with rows representing genomic intervals, columns representing samples, and values representing overlapping read counts (similar to an expression matrix in RNA-seq). To compute this, we need to define the rows in the form of a <em>consensus peak set</em>.</p>
-<div id="consensus-peak-set" class="section level3">
-<h3 class="hasAnchor">
-<a href="#consensus-peak-set" class="anchor"></a>Consensus peak set</h3>
+<div id="consensus-peak-set" class="section level2">
+<h2 class="hasAnchor">
+<a href="#consensus-peak-set" class="anchor"></a>Consensus peak set</h2>
 <p>One straightforward way to determine the consensus peaks is to consider genomic intervals that are identified as peaks in one or more of the samples. It can be helpful to make a plot of how many peaks overlap in how many samples:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">olap.rate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.overlap.html">dba.overlap</a></span><span class="op">(</span><span class="va">tam.peaks</span>, mode<span class="op">=</span><span class="va">DBA_OLAP_RATE</span><span class="op">)</span>
 <span class="va">olap.rate</span></code></pre></div>
 <pre><code>##  [1] 3743 2795 1731 1350 1037  782  621  455  362  186  119</code></pre>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">olap.rate</span>, xlab<span class="op">=</span><span class="st">"Overlapping samples"</span>, ylab<span class="op">=</span><span class="st">"Overlapping peaks"</span>, type<span class="op">=</span><span class="st">"b"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/rateplot-1.png" width="100%"></p>
 <p>This shows that there are 3743 total merged peaks, representing the union of all intervals. At the other extreme, there are 119 peaks that overlap in all 11 samples, representing the intersection of all the samples.</p>
 <p>Which should we chose? Given the rigor of the underlying statistical analysis, we can choose a more inclusive consensus set. The default is to make the consensus peak set using peaks identified in at least two samples (2795).</p>
 <p>More complex schemes, such as forming a consensus peak set separately from the replicates for each condition and then taking the union of these, are also possible.</p>
 <p>The default consensus peak set can be retrieved:</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">consensus.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.peakset.html">dba.peakset</a></span><span class="op">(</span><span class="va">tam.peaks</span>, bRetrieve<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">consensus.peaks</span><span class="op">[</span>,<span class="fl">0</span><span class="op">]</span></code></pre></div>
 <pre><code>## GRanges object with 2795 ranges and 0 metadata columns:
@@ -460,15 +458,19 @@
 ##   -------
 ##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
 </div>
-<div id="counting-overlapping-reads" class="section level3">
-<h3 class="hasAnchor">
-<a href="#counting-overlapping-reads" class="anchor"></a>Counting overlapping reads</h3>
+<div id="counting-overlapping-reads" class="section level2">
+<h2 class="hasAnchor">
+<a href="#counting-overlapping-reads" class="anchor"></a>Counting overlapping reads</h2>
 <p>The next step is to form the binding matrix using the consensus peak and computing overlapping read counts for each peak in each sample, <em>whether or not it was called as a peak in that sample.</em></p>
-<p>The function used to accomplish this is <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count()</a></code>:</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<p>The function used to accomplish this is <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count()</a></code>: <em>NB: This is a compute-intensive step that takes too long to run in the workshop</em> <em>Docker instance;</em> <strong>do not run the following chunk</strong> <em>if you are using the</em> <em>workshop Docker image</em>:</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count</a></span><span class="op">(</span><span class="va">tam.peaks</span><span class="op">)</span></code></pre></div>
-<p>NB: this call may take some time. You can, alternatively, obtain the results as follows:</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Computing summits...</span>
+<span class="co">## Re-centering peaks...</span>
+<span class="co">## Reads will be counted as Single-end.</span></code></pre></div>
+<p>You can, alternatively, obtain the results as follows:</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tamoxifen_counts</span><span class="op">)</span>
 <span class="va">tam.counts</span> <span class="op">&lt;-</span> <span class="va">tamoxifen</span></code></pre></div>
 <p><code><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count()</a></code> takes a number of parameter to control it’s default behavior. Here is a list of some important ones:</p>
@@ -485,7 +487,7 @@
 <strong>mapQCth</strong> sets a threshold for ignoring low-quality alignment. The default value of <code>mapQCth=15</code> results in all multi-mapped reads (reads that can map to multiple locations in the genome) being ignored.</li>
 </ul>
 <p>After counting the reads, the DBA object reflects the consensus peak set rather than the original peak data:</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.counts</span></code></pre></div>
 <pre><code>## 11 Samples, 2845 sites in matrix:
 ##        ID Tissue Factor  Condition  Treatment Replicate   Reads FRiP
@@ -502,7 +504,6 @@
 ## 11  ZR752   ZR75     ER Responsive Full-Media         2 2575408 0.22</code></pre>
 <p>Now all eleven samples have counts for all 2,845 consensus sites. Two columns have been added to the display, showing the total number of aligned <code>Reads</code> in each <code>.bam</code>file, and the Fraction of Reads in Peaks (<code>FRiP</code>) representing the proportion of reads that were counted as overlapping a consensus site.</p>
 </div>
-</div>
 <div id="examining-and-normalizing-the-binding-matrix" class="section level2">
 <h2 class="hasAnchor">
 <a href="#examining-and-normalizing-the-binding-matrix" class="anchor"></a>Examining and normalizing the binding matrix</h2>
@@ -512,12 +513,12 @@
 <a href="#plots-to-look-for-a-batch-effect" class="anchor"></a>Plots to look for a batch effect</h3>
 <p>Of particular interest is the presence of technical effects in the experiment, such as batch effects.</p>
 <p>We can look at how the samples cluster using heatmaps and PCA plots. A correlation heatmap (in which correlations values between each pair of columns in the binding matrix is calculated) can be shown using <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap()</a></code>, which is also the default plot:</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">tam.counts</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/counthm-1.png" width="100%"></p>
 <p>This shows a very high correlation between the replicate for each sample type, which indicates that there is not a large batch effect. The main clustering divides the samples into those derived from the MCF7 cell line, which are all highly correlated, with the other cell lines clustering together. At this point, we do not see a natural clustering into tamoxifen <code>Responsive</code> and <code>Resistant</code> clusters.</p>
 <p>We can verify that there is no obvious batch effect with a PCA plot:</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotPCA.html">dba.plotPCA</a></span><span class="op">(</span><span class="va">tam.counts</span>,<span class="va">DBA_REPLICATE</span>, label<span class="op">=</span><span class="va">DBA_TISSUE</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/countPCA-1.png" width="100%"></p>
 </div>
@@ -525,8 +526,8 @@
 <h3 class="hasAnchor">
 <a href="#normalization-deault" class="anchor"></a>Normalization (deault)</h3>
 <p>The next step is to normalize the data. Normalization of ChIP and ATAC sequencing data is not always straightforward, especially compared to normalization of RNA-seq data. We will look more closely at these issues in a subsequent section. For now we will use the default normalization in <code>DiffBind</code>, which makes minimal assumptions about the data and seeks to “do no harm”.</p>
-<p>First let’s make an MA plot of the date before normalization. An MA plot shows how the fold changes between conditions are distributed as the mean concdntration of reads counts increases. For this plot, we’ll compare use the sample sin the <code>Responsive</code>condition as the baseline, and see how the samples in the <code>Resistant</code>condition compare.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<p>First let’s make an MA plot of the date before normalization. An MA plot shows how the fold changes between conditions are distributed as the mean concentration of reads counts increases. For this plot, we’ll compare use the sample sin the <code>Responsive</code>condition as the baseline, and see how the samples in the <code>Resistant</code>condition compare.</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.counts</span>, bNormalized<span class="op">=</span><span class="cn">FALSE</span>, sub<span class="op">=</span><span class="st">"Non-Normalized"</span>,
            contrast<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Resistant<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Resistant</span>,
                          Responsive<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Responsive</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -534,28 +535,32 @@
 overlapping read counts for the consensus site, and the Y-axis shows the log2 fold change. Points above the 0-fold line (blue) demonstrate greater enrichment of reads in the <code>Resistant</code>condition, while point below the 0-fold line are more enriched int he <code>Responsive</code> condition. The red curve is a loess fit showing the overall trend in the data.</p>
 <p>This plots shows that in the raw data, the <code>Responsive</code> condition samples have overall higher concentration of overlapping reads in consensus peaks. This could either be a technical bias, or an indication that there is a loss of ER binding in the tamoxifen resistant condition.</p>
 <p>By default, <code>DiffBind</code> normalizes only using the full library sizes of the samples (total aligned reads in the <code>.bam</code>). Perform a default normalization and see how the plot changes:</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.counts</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.counts</span>, sub<span class="op">=</span><span class="st">"Normalized (Default)"</span>,
            contrast<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Resistant<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Resistant</span>,
                          Responsive<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Responsive</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normdef-1.png" width="100%"></p>
-<p>Compared to the non-normalized data, the fold changes are somewhat mnore balanced and moved closer to the central 0-fold line, although the loess fit shows there is still a bias towards greater enrichment in the <code>Responsive</code> condition.</p>
+<p>Compared to the non-normalized data, the fold changes are somewhat more balanced and moved closer to the central 0-fold line, although the loess fit shows there is still a bias towards greater enrichment in the <code>Responsive</code> condition.</p>
 <p>We will consider normalization in more depth after modeling the data, as it is useful to consider the impact of normalization on the modeling results.</p>
+<p><br><br><br><br></p>
 </div>
 </div>
-<div id="modeling-and-testing" class="section level2">
+</div>
+<div id="modeling-and-testing" class="section level1">
+<h1 class="hasAnchor">
+<a href="#modeling-and-testing" class="anchor"></a>Modeling and testing</h1>
+<p><br></p>
+<p>The core differential analysis in <code>DiffBind</code>is performed by one or more underlying read count modeling Bioconductor packages. The default package is <code>DESeq2</code> <span class="citation">(Love, Huber, and Anders 2014)</span>; the <code>edgeR</code> package <span class="citation">(Robinson, McCarthy, and Smyth 2010)</span> may be also used either as an alternative or in parallel. These packages, developed for modeling RNA-seq read counts, enable GLMs to be fit.</p>
+<div id="default-model" class="section level2">
 <h2 class="hasAnchor">
-<a href="#modeling-and-testing" class="anchor"></a>Modeling and testing</h2>
-<p>The core differential analysis in <code>DiffBind</code>is performed by one or more underlying read count modeling Bioconductor packges. The default package is <code>DESeq2</code> <span class="citation">(Love, Huber, and Anders 2014)</span>; the <code>edgeR</code> package <span class="citation">(Robinson, McCarthy, and Smyth 2010)</span> may be also used either as an alternative or in parallel. These packages, developed for modeling RNA-seq read counts, enable GLMs to be fit.</p>
-<div id="default-model" class="section level3">
-<h3 class="hasAnchor">
-<a href="#default-model" class="anchor"></a>Default model</h3>
-<p>The <code>DiffBind</code> function <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast()</a></code> is used to specify the model and establish contrasts to be tested against the model. A default model and contrasts(s) can easily be established:</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast</a></span><span class="op">(</span><span class="va">tam.counts</span><span class="op">)</span></code></pre></div>
+<a href="#default-model" class="anchor"></a>Default model</h2>
+<p>The <code>DiffBind</code> function <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast()</a></code> is used to specify the model and establish contrasts to be tested against the model. A default model and contrasts(s) can easily be established (note we explicitly specify that the baseline Condition should be <code>Responsive</code>):</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast</a></span><span class="op">(</span><span class="va">tam.counts</span>,
+                          reorderMeta<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Condition<span class="op">=</span><span class="st">"Responsive"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Computing results names...</code></pre>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span></code></pre></div>
 <pre><code>## 11 Samples, 2845 sites in matrix:
 ##        ID Tissue Factor  Condition  Treatment Replicate   Reads FRiP
@@ -576,32 +581,33 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 ## 1 Condition Resistant       4 Responsive        7</code></pre>
 <p>The default model is based on observing that there is only one metadata field, <code>Condition</code>, that has a) multiple values and b) at least three samples having each value. A design formula is established using this factor and a contrast comparing <code>Resistant</code> samples against the <code>Responsive</code> samples, with four samples in the <code>Resistant</code> condition and seven samples in the <code>Responsive</code> condition.</p>
 </div>
-<div id="fitting-and-testing" class="section level3">
-<h3 class="hasAnchor">
-<a href="#fitting-and-testing" class="anchor"></a>Fitting and testing</h3>
-<p>With the design formula in place, and a contrast established, the model can be fit with <code>DESeq2</code> and tests applied for the contrast:</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span></code></pre></div>
-<pre><code>## Analyzing...</code></pre>
-<pre><code>## gene-wise dispersion estimates</code></pre>
-<pre><code>## mean-dispersion relationship</code></pre>
-<pre><code>## final dispersion estimates</code></pre>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.show.html">dba.show</a></span><span class="op">(</span><span class="va">tam.model</span>,bContrasts<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>##      Factor     Group Samples     Group2 Samples2 DB.DESeq2
-## 1 Condition Resistant       4 Responsive        7       246</code></pre>
-<p>At the default threshold of <code>FDR &lt; 0.05</code>, some 246 sites are identified as being differentially bound.</p>
-</div>
-</div>
-<div id="examining-analysis-results" class="section level2">
+<div id="fitting-and-testing" class="section level2">
 <h2 class="hasAnchor">
-<a href="#examining-analysis-results" class="anchor"></a>Examining analysis results</h2>
+<a href="#fitting-and-testing" class="anchor"></a>Fitting and testing</h2>
+<p>With the design formula in place, and a contrast established, the model can be fit with <code>DESeq2</code> and tests applied for the contrast:</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
+<span class="co">## Analyzing...</span>
+<span class="co">## gene-wise dispersion estimates</span>
+<span class="co">## mean-dispersion relationship</span>
+<span class="co">## final dispersion estimates</span>
+<span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.show.html">dba.show</a></span><span class="op">(</span><span class="va">tam.model</span>,bContrasts<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">##      Factor     Group Samples     Group2 Samples2 DB.DESeq2</span>
+<span class="co">## 1 Condition Resistant       4 Responsive        7       246</span></code></pre></div>
+<p>At the default threshold of <code>FDR &lt; 0.05</code>, some 246 sites are identified as being differentially bound.</p>
+<p><br><br><br><br></p>
+</div>
+</div>
+<div id="examining-analysis-results" class="section level1">
+<h1 class="hasAnchor">
+<a href="#examining-analysis-results" class="anchor"></a>Examining analysis results</h1>
+<p><br></p>
 <p>After conducting an analysis, the results can be examined in a number of ways, including obtaining a report with the differential sites, as well as some useful plots.</p>
-<div id="reporting-obtaining-differential-sites" class="section level3">
-<h3 class="hasAnchor">
-<a href="#reporting-obtaining-differential-sites" class="anchor"></a>Reporting: obtaining differential sites</h3>
+<div id="reporting-obtaining-differential-sites" class="section level2">
+<h2 class="hasAnchor">
+<a href="#reporting-obtaining-differential-sites" class="anchor"></a>Reporting: obtaining differential sites</h2>
 <p>The differential sites may be retrieved as a <code>GRanges</code> object:</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.report.html">dba.report</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="va">tam.db</span></code></pre></div>
 <pre><code>## GRanges object with 246 ranges and 6 metadata columns:
@@ -649,103 +655,296 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <strong>FDR</strong>: multiple-testing corrected significance value for the comparison, as computed by <code>DESeq2</code>.</li>
 </ul>
 <p>We can look at the balance between Gain and Loss sites:</p>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">tam.db</span><span class="op">$</span><span class="va">Fold</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 64</code></pre>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">tam.db</span><span class="op">$</span><span class="va">Fold</span><span class="op">&lt;</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 182</code></pre>
 <p>The report object can now be used for downstream analysis, such as motif analysis, annotation to genomic features, etc.</p>
 </div>
-<div id="plotting-ma-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotting-ma-plot" class="anchor"></a>Plotting: MA plot</h3>
+<div id="plotting-ma-plot" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotting-ma-plot" class="anchor"></a>Plotting: MA plot</h2>
 <p>After an analysis, it is useful to generate an MA plot with the differential sites superimposed:</p>
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/macontrast-1.png" width="100%"></p>
 </div>
-<div id="plotting-volcano-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotting-volcano-plot" class="anchor"></a>Plotting: Volcano plot</h3>
-<p>Similar to an MA plot, a volcano plot shows the log fold change (on the X-axis instead fo the Y-axis), compared to the inverse of the FDR on the Y-axis, to show how FDR and LFC are related:</p>
-<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<div id="plotting-volcano-plot" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotting-volcano-plot" class="anchor"></a>Plotting: Volcano plot</h2>
+<p>Similar to an MA plot, a volcano plot shows the log fold change (on the X-axis instead of the Y-axis), compared to the inverse of the FDR on the Y-axis, to show how FDR and LFC are related:</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotVolcano.html">dba.plotVolcano</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/volcano-1.png" width="100%"></p>
 </div>
-<div id="plotting-clustering-correlation-heatmap" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotting-clustering-correlation-heatmap" class="anchor"></a>Plotting: Clustering correlation heatmap</h3>
+<div id="plotting-clustering-correlation-heatmap" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotting-clustering-correlation-heatmap" class="anchor"></a>Plotting: Clustering correlation heatmap</h2>
 <p>We can also re-visit the clustering plots we originally did on the full binding matrix, except this time only taking differential sites intro consideration:</p>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/corhmcontrast-1.png" width="100%"></p>
 <p>As we would hope, the differential sites separate the samples into two clusters, one <code>Resistant</code> and one <code>Responsive</code>.</p>
 </div>
-<div id="plotting-pca-plot" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotting-pca-plot" class="anchor"></a>Plotting: PCA plot</h3>
+<div id="plotting-pca-plot" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotting-pca-plot" class="anchor"></a>Plotting: PCA plot</h2>
 <p>Likewise, a PCA plot based only on the differential sites shows how the samples can be separated by condition:</p>
-<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotPCA.html">dba.plotPCA</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span>, label<span class="op">=</span><span class="va">DBA_TISSUE</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/pcacontrast-1.png" width="100%"></p>
 </div>
-<div id="plotting-read-concentration-heatmap" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plotting-read-concentration-heatmap" class="anchor"></a>Plotting: Read concentration heatmap</h3>
+<div id="plotting-read-concentration-heatmap" class="section level2">
+<h2 class="hasAnchor">
+<a href="#plotting-read-concentration-heatmap" class="anchor"></a>Plotting: Read concentration heatmap</h2>
 <p>In addition to the correlation heatmap, a plot showing the read concentrations can also be generated. In this case we scale the read concentrations for each site, to emphasize the difference between the lowest and highest values:</p>
-<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"green"</span><span class="op">)</span><span class="op">)</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>
 <span class="va">readscores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span>, correlations<span class="op">=</span><span class="cn">FALSE</span>,
                               scale<span class="op">=</span><span class="st">"row"</span>, colScheme <span class="op">=</span> <span class="va">hmap</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/hmcontrast-1.png" width="100%"></p>
+<p><br><br><br><br></p>
 </div>
 </div>
-<div id="multi-factor-design" class="section level2">
-<h2 class="hasAnchor">
-<a href="#multi-factor-design" class="anchor"></a>Multi-factor design</h2>
+<div id="multi-factor-design" class="section level1">
+<h1 class="hasAnchor">
+<a href="#multi-factor-design" class="anchor"></a>Multi-factor design</h1>
+<p><br></p>
 <p>The default design and contrasts may not be the correct ones, as they may not be focused on the factors of interest. In the current case, it turns out that it is important to use a multi-factor design in order to model the use of different cell lines with each condition, and most importantly the fact that a single cell origin (MCF7) is used across conditions.</p>
 <p>In the current case, we will change the model to the “correct” multi-factor design before proceeding:</p>
-<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast</a></span><span class="op">(</span><span class="va">tam.model</span>, design<span class="op">=</span><span class="st">"~Tissue + Condition"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Replacing design and removing analysis.</code></pre>
-<pre><code>## Computing results names...</code></pre>
-<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.show.html">dba.show</a></span><span class="op">(</span><span class="va">tam.model</span>,bDesign<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "~Tissue + Condition"</code></pre>
-<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span></code></pre></div>
-<pre><code>## Analyzing...</code></pre>
-<pre><code>## gene-wise dispersion estimates</code></pre>
-<pre><code>## mean-dispersion relationship</code></pre>
-<pre><code>## final dispersion estimates</code></pre>
-<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.model</span></code></pre></div>
-<pre><code>## 11 Samples, 2845 sites in matrix:
-##        ID Tissue Factor  Condition  Treatment Replicate   Reads FRiP
-## 1  BT4741  BT474     ER  Resistant Full-Media         1  652697 0.16
-## 2  BT4742  BT474     ER  Resistant Full-Media         2  663370 0.15
-## 3   MCF71   MCF7     ER Responsive Full-Media         1  346429 0.31
-## 4   MCF72   MCF7     ER Responsive Full-Media         2  368052 0.19
-## 5   MCF73   MCF7     ER Responsive Full-Media         3  466273 0.25
-## 6   T47D1   T47D     ER Responsive Full-Media         1  399879 0.11
-## 7   T47D2   T47D     ER Responsive Full-Media         2 1475415 0.06
-## 8  MCF7r1   MCF7     ER  Resistant Full-Media         1  616630 0.22
-## 9  MCF7r2   MCF7     ER  Resistant Full-Media         2  593224 0.14
-## 10  ZR751   ZR75     ER Responsive Full-Media         1  706836 0.33
-## 11  ZR752   ZR75     ER Responsive Full-Media         2 2575408 0.22
-## 
-## Design: [~Tissue + Condition] | 1 Contrast:
-##      Factor     Group Samples     Group2 Samples2 DB.DESeq2
-## 1 Condition Resistant       4 Responsive        7       783</code></pre>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast</a></span><span class="op">(</span><span class="va">tam.model</span>, design<span class="op">=</span><span class="st">"~Tissue + Condition"</span><span class="op">)</span>
+<span class="co">## Replacing design and removing analysis.</span>
+<span class="co">## Computing results names...</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.show.html">dba.show</a></span><span class="op">(</span><span class="va">tam.model</span>,bDesign<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">## [1] "~Tissue + Condition"</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
+<span class="co">## Analyzing...</span>
+<span class="co">## gene-wise dispersion estimates</span>
+<span class="co">## mean-dispersion relationship</span>
+<span class="co">## final dispersion estimates</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span>
+<span class="co">## 11 Samples, 2845 sites in matrix:</span>
+<span class="co">##        ID Tissue Factor  Condition  Treatment Replicate   Reads FRiP</span>
+<span class="co">## 1  BT4741  BT474     ER  Resistant Full-Media         1  652697 0.16</span>
+<span class="co">## 2  BT4742  BT474     ER  Resistant Full-Media         2  663370 0.15</span>
+<span class="co">## 3   MCF71   MCF7     ER Responsive Full-Media         1  346429 0.31</span>
+<span class="co">## 4   MCF72   MCF7     ER Responsive Full-Media         2  368052 0.19</span>
+<span class="co">## 5   MCF73   MCF7     ER Responsive Full-Media         3  466273 0.25</span>
+<span class="co">## 6   T47D1   T47D     ER Responsive Full-Media         1  399879 0.11</span>
+<span class="co">## 7   T47D2   T47D     ER Responsive Full-Media         2 1475415 0.06</span>
+<span class="co">## 8  MCF7r1   MCF7     ER  Resistant Full-Media         1  616630 0.22</span>
+<span class="co">## 9  MCF7r2   MCF7     ER  Resistant Full-Media         2  593224 0.14</span>
+<span class="co">## 10  ZR751   ZR75     ER Responsive Full-Media         1  706836 0.33</span>
+<span class="co">## 11  ZR752   ZR75     ER Responsive Full-Media         2 2575408 0.22</span>
+<span class="co">## </span>
+<span class="co">## Design: [~Tissue + Condition] | 1 Contrast:</span>
+<span class="co">##      Factor     Group Samples     Group2 Samples2 DB.DESeq2</span>
+<span class="co">## 1 Condition Resistant       4 Responsive        7       783</span></code></pre></div>
 <p>With the multi-factor model taking into account the underlying tissue types, we now identify 783 differential sites at the default threshold of <code>FDR &lt; 0.05</code>. The resulting MA plot shows these are biased towards loss of binding the in <code>Resistant</code> condition:</p>
-<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/mamulti-1.png" width="100%"></p>
+<p><br><br><br><br></p>
 </div>
-<div id="references" class="section level2 unnumbered">
+<div id="normalization-discussion" class="section level1">
+<h1 class="hasAnchor">
+<a href="#normalization-discussion" class="anchor"></a>Normalization discussion</h1>
+<p><br></p>
+<p>Normalization of experimental data is particularly important in ChIP-seq (and ATAC-seq) analysis, and may require more careful consideration than needed for RNA-seq analysis. This is because the range of ChIP-seq experiments covers more cases than RNA-seq, which usually involve a similar set of possible expressed genes and/or transcripts, many of which are not expected to significantly change expression. ChIP, ATAC, and similar enrichment-based sequencing data may not follow the assumptions inherent in popular methods for normalizing RNA-seq data, as well as exhibiting different types of efficiency and other biases.</p>
+<div id="core-normalization-methods" class="section level2">
 <h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<a href="#core-normalization-methods" class="anchor"></a>Core normalization methods</h2>
+<p>The default normalization method in <code>DiffBind</code> is to look only at the relative library sizes (number of aligned reads) of the experimental samples. Why don’t we use the underlying analysis methods inherent in the <code>DESeq2</code> (RLE) and <code>edgeR</code> (TMM) differential analysis packages?</p>
+<p>Consider the sample experiment. We saw in the first two MA plots that there was a bias towards greater read concentration in the <code>Responsive</code> condition; this was reduced somewhat, but still remained, after library-size normalization, and the analysis identified more differential sites that gained binding in the <code>Responsive</code> condition (also seen as binding loss in the <code>Responsive</code> condition:)</p>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">FALSE</span>, th<span class="op">=</span><span class="fl">0</span>, sub<span class="op">=</span><span class="st">"Non-Normalized"</span><span class="op">)</span></code></pre></div>
+<p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/norm2maplots1-1.png" width="100%"></p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">TRUE</span>, sub<span class="op">=</span><span class="st">"Normalized: Library Size"</span><span class="op">)</span></code></pre></div>
+<p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/norm2maplots1-2.png" width="100%"></p>
+<p>Let’s see what happens if we normalizing using the “native” method in <code>DESeq2</code>, RLE:</p>
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.model</span>, normalize<span class="op">=</span><span class="st">"RLE"</span><span class="op">)</span>
+<span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
+<span class="co">## Analyzing...</span>
+<span class="co">## gene-wise dispersion estimates</span>
+<span class="co">## mean-dispersion relationship</span>
+<span class="co">## final dispersion estimates</span>
+<span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">TRUE</span>, sub<span class="op">=</span><span class="st">"Normalized: RLE [RiP]"</span><span class="op">)</span></code></pre></div>
+<p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normRLERiP-1.png" width="100%"></p>
+<p>The result is quite different! The read concentrations are closely balanced and fit near the zero log fold change line. The differential sites are also more balance between those losing and gaining affinity in the <code>Resistant</code> condition:</p>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.report.html">dba.report</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">rep</span><span class="op">$</span><span class="va">Fold</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 402</code></pre>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">rep</span><span class="op">$</span><span class="va">Fold</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 469</code></pre>
+<p>What accounts for the difference? Which is the “correct” analysis?</p>
+</div>
+<div id="reference-reads" class="section level2">
+<h2 class="hasAnchor">
+<a href="#reference-reads" class="anchor"></a>Reference reads</h2>
+<p>It turns out that for the type of data we are dealing with in DNA enrichment assays, the reads that are used as the reference for normalizing are more important that the normalization method itself. While in RNA-seq experiments the expression matrix can be normalized directly, based on the reads that uniquely overlap genes or transcripts (known as “Reads-in-Peaks”, or “RiP”), this does not apply to a binding matrix based on a consensus peakset.</p>
+<p>In a non-peak bases analysis such as is done using the <code>csaw</code> package<span class="citation">(Lun and Smyth 2016)</span>, where there is no consensus binding matrix, this issue was addressed by using a large “bins” of reads across the genome. The idea is that the bins, being so much larger in size than binding sites or stretches of open chromatin, contain mostly “background” reads, and present a less biased way of providing a read count matrix on which to base normalization calculations. This “background” method is included in <code>DiffBind</code> <em>NB: This is a compute-intensive step, however if you have loaded the</em> <em>pre-computed counts, these already include the background reads</em> <em>so this operation may be safely run</em>:</p>
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.model</span>, normalize<span class="op">=</span><span class="st">"RLE"</span>,
+                           background<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
+<span class="co">## Analyzing...</span>
+<span class="co">## gene-wise dispersion estimates</span>
+<span class="co">## mean-dispersion relationship</span>
+<span class="co">## final dispersion estimates</span>
+<span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">TRUE</span>, sub<span class="op">=</span><span class="st">"Normalized: RLE [Background]"</span><span class="op">)</span></code></pre></div>
+<p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normRLbackground-1.png" width="100%"></p>
+<p>This yields result that more closely match those obtained using the default library-size based normalization.</p>
+</div>
+<div id="comparison-of-normalization-and-reference-reads-methods" class="section level2">
+<h2 class="hasAnchor">
+<a href="#comparison-of-normalization-and-reference-reads-methods" class="anchor"></a>Comparison of normalization and reference reads methods</h2>
+<p>It is interesting to compare the impact of six different normalization schemes:</p>
+<ol style="list-style-type: decimal">
+<li>Library size normalization based on total aligned reads (<code>lib_full</code>)</li>
+<li>Library size normalization based on Reads in Peaks (<code>lib_RiP</code>)</li>
+<li>RLE (native to <code>DESeq2</code>) normalization based on Reads in Peaks (<code>RLE_RiP</code>)</li>
+<li>RLE (native to <code>DESeq2</code>) normalization based on background bins (<code>RLE_BG</code>)</li>
+<li>TMM (native to <code>edgeR</code>) normalization based on Reads in Peaks (<code>TMM_RiP</code>)</li>
+<li>TMM (native to <code>edgeR</code>) normalization based on background bins (<code>TMM_BG</code>)</li>
+</ol>
+<p>There is an R script in the <code>inst/scripts</code> directory called <code>compare_norm.R</code>, that performs all six of the normalization schemes, performs a <code>DESeq2</code> analysis on each, and collects the differential sites into a report-based DBA object that can be loaded as follows:</p>
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">norm.comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.load.html">dba.load</a></span><span class="op">(</span><span class="st">"norm_comp"</span><span class="op">)</span>
+<span class="co">## Warning: Loading DBA object from a previous version -- updating...</span>
+<span class="va">norm.comp</span>
+<span class="co">## 6 Samples, 1076 sites in matrix:</span>
+<span class="co">##   Contrast Normalization.Method Reference.Reads Analysis.Method Intervals</span>
+<span class="co">## 1 lib_full                  lib              BG          DESeq2       783</span>
+<span class="co">## 2  lib_RiP                  lib             RiP          DESeq2       931</span>
+<span class="co">## 3  RLE_RiP                  RLE             RiP          DESeq2       871</span>
+<span class="co">## 4   RLE_BG                  RLE              BG          DESeq2       652</span>
+<span class="co">## 5  TMM_RiP                  TMM             RiP          DESeq2       911</span>
+<span class="co">## 6   TMM_BG                  TMM              BG          DESeq2       689</span></code></pre></div>
+<p>We can look at the differences in a couple of ways. One is to consider how closely correlated are the resulting differential sites:</p>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap</a></span><span class="op">(</span><span class="va">norm.comp</span><span class="op">)</span></code></pre></div>
+<p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normcorplot-1.png" width="100%"></p>
+<p>This shows how the results cluster. While all the analysis have a core sets of sites in common (the lowest correlation between analyses is 0.82, there are two distinct clusters driven not by the normalization methods, but by the choice of reference reads. One cluster uses <em>all</em> the reads (background bins <code>BG</code> or full library size <code>full</code>), while the other cluster normalizes based only on reads in the binding matrix (<code>RiP</code>). The least important difference is the choice of normalization methods: <code>edgeR</code>’s TMM method and <code>DESeq2</code>’s RLE method produce essentially the same results when using the same reference reads.</p>
+<p>Next we can look at differences in the differential sites themselves by plotting a heatmap of the log fold changes (LFC) of each site:</p>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">hmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"green"</span><span class="op">)</span><span class="op">)</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap</a></span><span class="op">(</span><span class="va">norm.comp</span>, correlations<span class="op">=</span><span class="cn">FALSE</span>, 
+                bLog<span class="op">=</span><span class="cn">FALSE</span>, colScheme<span class="op">=</span><span class="va">hmap</span>, 
+                minval<span class="op">=</span><span class="op">-</span><span class="fl">4</span>, maxval<span class="op">=</span><span class="fl">4</span>,
+                key.title <span class="op">=</span> <span class="st">"LFC"</span>, main <span class="op">=</span> <span class="st">"DESeq2 Differentially Bound Sites"</span><span class="op">)</span></code></pre></div>
+<p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normheatmap-1.png" width="100%"></p>
+<p>Sites in green are ones that Gain binding intensity in the <code>Resistant</code> condition, while those in red lose binding intensity. Sites in black are ones that are not identified in a specific analysis. This plot again shows how the analyses cluster first by the choice of reference reads, but also shows how the balance of sites changes, with one cluster identifying mostly Loss (red) sites, and the other <code>RiP</code> cluster identifying many more Gain sites.</p>
+<p>The biological conclusions one might reach could be quite different depending on which normalization scheme is chosen.</p>
+</div>
+<div id="spike-ins-and-parallel-factors" class="section level2">
+<h2 class="hasAnchor">
+<a href="#spike-ins-and-parallel-factors" class="anchor"></a>Spike-ins and parallel factors</h2>
+<p>While it is beyond the scope of this workshop, it is worth nothing that alternative sets of reference reads can be used. <code>DiffBind</code> supports the use of spike-ins, where the reads used to normalize the libraries are based on those aligned to exogenous chromatin (eg. from <em>Drosophila melanogaster</em>), or are identified as peaks associated with a factor or mark that is known to not change under the experimental conditions. See the <code>DiffBind</code> vignette, and help page for <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize()</a></code>, for guidance on how to perform such normalization.</p>
+<p><br><br><br><br></p>
+</div>
+</div>
+<div id="sneak-peak-profile-plots-coming-in-diffbind-3-2" class="section level1">
+<h1 class="hasAnchor">
+<a href="#sneak-peak-profile-plots-coming-in-diffbind-3-2" class="anchor"></a>Sneak peak: Profile Plots (coming in <code>DiffBind 3.2</code>)</h1>
+<div class="figure">
+<img src="mcf7_profiles.png" alt=""><p class="caption">Profile Heatmap for MCF7 samples</p>
+</div>
+<p><br><br><br><br></p>
+</div>
+<div id="sessioninfo" class="section level1">
+<h1 class="hasAnchor">
+<a href="#sessioninfo" class="anchor"></a>sessionInfo()</h1>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">## R version 4.0.3 (2020-10-10)</span>
+<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
+<span class="co">## Running under: Ubuntu 20.04 LTS</span>
+<span class="co">## </span>
+<span class="co">## Matrix products: default</span>
+<span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
+<span class="co">## </span>
+<span class="co">## locale:</span>
+<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
+<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
+<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             </span>
+<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
+<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
+<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
+<span class="co">## </span>
+<span class="co">## attached base packages:</span>
+<span class="co">## [1] parallel  stats4    stats     graphics  grDevices utils     datasets </span>
+<span class="co">## [8] methods   base     </span>
+<span class="co">## </span>
+<span class="co">## other attached packages:</span>
+<span class="co">##  [1] csaw_1.24.3                 GreyListChIP_1.22.0        </span>
+<span class="co">##  [3] DiffBind_3.0.8              SummarizedExperiment_1.20.0</span>
+<span class="co">##  [5] Biobase_2.50.0              MatrixGenerics_1.2.0       </span>
+<span class="co">##  [7] matrixStats_0.57.0          GenomicRanges_1.42.0       </span>
+<span class="co">##  [9] GenomeInfoDb_1.26.2         IRanges_2.24.0             </span>
+<span class="co">## [11] S4Vectors_0.28.1            BiocGenerics_0.36.0        </span>
+<span class="co">## [13] knitr_1.30                 </span>
+<span class="co">## </span>
+<span class="co">## loaded via a namespace (and not attached):</span>
+<span class="co">##   [1] GOstats_2.56.0           backports_1.2.1          BiocFileCache_1.14.0    </span>
+<span class="co">##   [4] systemfonts_0.3.2        plyr_1.8.6               GSEABase_1.52.0         </span>
+<span class="co">##   [7] splines_4.0.3            BiocParallel_1.24.1      ggplot2_3.3.2           </span>
+<span class="co">##  [10] amap_0.8-18              digest_0.6.27            invgamma_1.1            </span>
+<span class="co">##  [13] htmltools_0.5.0          GO.db_3.12.1             SQUAREM_2020.5          </span>
+<span class="co">##  [16] magrittr_2.0.1           checkmate_2.0.0          memoise_1.1.0           </span>
+<span class="co">##  [19] BSgenome_1.58.0          base64url_1.4            limma_3.46.0            </span>
+<span class="co">##  [22] Biostrings_2.58.0        annotate_1.68.0          systemPipeR_1.24.2      </span>
+<span class="co">##  [25] bdsmatrix_1.3-4          askpass_1.1              pkgdown_1.6.1           </span>
+<span class="co">##  [28] prettyunits_1.1.1        jpeg_0.1-8.1             colorspace_2.0-0        </span>
+<span class="co">##  [31] blob_1.2.1               rappdirs_0.3.1           apeglm_1.12.0           </span>
+<span class="co">##  [34] ggrepel_0.8.2            textshaping_0.2.1        xfun_0.19               </span>
+<span class="co">##  [37] dplyr_1.0.2              crayon_1.3.4             RCurl_1.98-1.2          </span>
+<span class="co">##  [40] jsonlite_1.7.2           graph_1.68.0             genefilter_1.72.0       </span>
+<span class="co">##  [43] brew_1.0-6               survival_3.2-7           VariantAnnotation_1.36.0</span>
+<span class="co">##  [46] glue_1.4.2               gtable_0.3.0             zlibbioc_1.36.0         </span>
+<span class="co">##  [49] XVector_0.30.0           DelayedArray_0.16.0      V8_3.4.0                </span>
+<span class="co">##  [52] Rgraphviz_2.34.0         scales_1.1.1             mvtnorm_1.1-1           </span>
+<span class="co">##  [55] pheatmap_1.0.12          DBI_1.1.0                edgeR_3.32.0            </span>
+<span class="co">##  [58] Rcpp_1.0.5               xtable_1.8-4             progress_1.2.2          </span>
+<span class="co">##  [61] emdbook_1.3.12           bit_4.0.4                rsvg_2.1                </span>
+<span class="co">##  [64] truncnorm_1.0-8          AnnotationForge_1.32.0   httr_1.4.2              </span>
+<span class="co">##  [67] gplots_3.1.1             RColorBrewer_1.1-2       ellipsis_0.3.1          </span>
+<span class="co">##  [70] farver_2.0.3             pkgconfig_2.0.3          XML_3.99-0.5            </span>
+<span class="co">##  [73] dbplyr_2.0.0             locfit_1.5-9.4           labeling_0.4.2          </span>
+<span class="co">##  [76] tidyselect_1.1.0         rlang_0.4.9              AnnotationDbi_1.52.0    </span>
+<span class="co">##  [79] munsell_0.5.0            tools_4.0.3              generics_0.1.0          </span>
+<span class="co">##  [82] RSQLite_2.2.1            evaluate_0.14            stringr_1.4.0           </span>
+<span class="co">##  [85] yaml_2.2.1               ragg_0.4.0               bit64_4.0.5             </span>
+<span class="co">##  [88] fs_1.5.0                 caTools_1.18.0           purrr_0.3.4             </span>
+<span class="co">##  [91] RBGL_1.66.0              xml2_1.3.2               biomaRt_2.46.0          </span>
+<span class="co">##  [94] debugme_1.1.0            compiler_4.0.3           curl_4.3                </span>
+<span class="co">##  [97] png_0.1-7                geneplotter_1.68.0       tibble_3.0.4            </span>
+<span class="co">## [100] stringi_1.5.3            GenomicFeatures_1.42.1   desc_1.2.0              </span>
+<span class="co">## [103] lattice_0.20-41          Matrix_1.2-18            vctrs_0.3.5             </span>
+<span class="co">## [106] pillar_1.4.7             lifecycle_0.2.0          irlba_2.3.3             </span>
+<span class="co">## [109] data.table_1.13.4        bitops_1.0-6             rtracklayer_1.50.0      </span>
+<span class="co">## [112] R6_2.5.0                 latticeExtra_0.6-29      hwriter_1.3.2           </span>
+<span class="co">## [115] bookdown_0.21            ShortRead_1.48.0         KernSmooth_2.23-18      </span>
+<span class="co">## [118] codetools_0.2-18         MASS_7.3-53              gtools_3.8.2            </span>
+<span class="co">## [121] assertthat_0.2.1         DESeq2_1.30.0            openssl_1.4.3           </span>
+<span class="co">## [124] Category_2.56.0          rprojroot_2.0.2          rjson_0.2.20            </span>
+<span class="co">## [127] withr_2.3.0              GenomicAlignments_1.26.0 batchtools_0.9.14       </span>
+<span class="co">## [130] Rsamtools_2.6.0          GenomeInfoDbData_1.2.4   hms_0.5.3               </span>
+<span class="co">## [133] grid_4.0.3               DOT_0.1                  coda_0.19-4             </span>
+<span class="co">## [136] rmarkdown_2.5            ashr_2.2-47              mixsqp_0.3-43           </span>
+<span class="co">## [139] bbmle_1.0.23.1           numDeriv_2016.8-1.1</span></code></pre></div>
+<p><br><br><br><br></p>
+<p>#References</p>
 <div id="refs" class="references">
 <div id="ref-amemiya2019blacklist">
 <p>Amemiya, Haley M., Anshul Kundaje, and Alan P. Boyle. 2019. “The ENCODE Blacklist: Identification of Problematic Regions of the Genome.” <em>Scientific Reports</em> 9 (1): 9354.</p>
@@ -764,7 +963,6 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 </div>
 <div id="ref-zhang2008model">
 <p>Zhang, Y., T. Liu, C. A. Meyer, J. Eeckhoute, D. S. Johnson, B. E. Bernstein, C. Nussbaum, et al. 2008. “Model-Based Analysis of ChIP-Seq (MACS).” <em>Genome Biol</em> 9 (9): R137.</p>
-</div>
 </div>
 </div>
 </div>

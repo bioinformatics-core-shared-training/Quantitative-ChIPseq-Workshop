@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">QuantitativeChIPseqWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7</span>
       </span>
     </div>
 
@@ -100,7 +100,7 @@
 <div id="workshop-description" class="section level1">
 <h1 class="hasAnchor">
 <a href="#workshop-description" class="anchor"></a>Workshop Description</h1>
-<p>This workshop will demonstrate the steps involved in performing a quantitative analysis of ChIP-seq data in <em>Bioconductor</em> (up to and including differential binding analysis), with some discussion of related assays such as ATAC-seq. Particular attention will be paid to processing of aligned reads, including blacklisting, greylisting, filtering for quality and duplication, and the particular challenges presented when normalizing these data. While the workshop follows the <em>DiffBind</em> package vignette, the use of a number of other <em>Bioconductor</em> packages is discussed, including <em>csaw</em>, <em>ChIPQC</em>, <em>edgeR</em>, <em>DESeq2</em>, and <em>GreyListChIP</em>.</p>
+<p>This workshop will demonstrate the steps involved in performing a quantitative analysis of ChIP-seq data in <em>Bioconductor</em> (specifically differential binding analysis), with some discussion of related assays such as ATAC-seq. Particular attention will be paid to processing of aligned reads, including blacklisting, greylisting, filtering for quality and duplication, and the particular challenges presented when normalizing these data. While the workshop follows the <em>DiffBind</em> package vignette, the use of a number of other <em>Bioconductor</em> packages is discussed, including <em>csaw</em>, <em>ChIPQC</em>, <em>edgeR</em>, <em>DESeq2</em>, and <em>GreyListChIP</em>.</p>
 <div id="pre-requisites" class="section level2">
 <h2 class="hasAnchor">
 <a href="#pre-requisites" class="anchor"></a>Pre-requisites</h2>
@@ -125,22 +125,50 @@
 <div id="workshop-participation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#workshop-participation" class="anchor"></a>Workshop participation</h2>
-<p>A mini-lecture will be given at the beginning that will cover basic ideas behind ChIP-seq, comparision of commonly used tools for ChIP-seq data analysis. Then, a hands-on demo will be performed to demonstrate the downstream analysis with ChIPpeakAnno and trackViewer packages. Last will be a Q/A section.</p>
+<p>Students will participate by following along an <a href="https://rmarkdown.rstudio.com/"><em>R markdown</em></a> document, and asking questions throughout the workshop.</p>
+<p>The conference organizers have arranged for attendees to have access to a RStudio session running inside a Docker instance that contains everything you need to follow the workshop.</p>
+<p><strong>NOTE</strong>: <em>The workshop Docker instance does not have much compute power.</em> <em>As a result, it is not possible to run all the code in the time allowed.</em> <em>Two operations are affected: building greylists, and counting reads.</em> <em>In these cases, the workshop includes pre-computed data objects that</em> <em>can be loaded to avoid the time-consuming code.</em> <em>This is noted inline.</em></p>
 </div>
-<div id="how-to-run-docker" class="section level2">
+<div id="workshop-participation--local-docker-image" class="section level2">
 <h2 class="hasAnchor">
-<a href="#how-to-run-docker" class="anchor"></a>How to run Docker</h2>
-<ul>
-<li>Install Docker (<a href="https://www.docker.com/" class="uri">https://www.docker.com/</a>)</li>
-<li>Pull the Docker image from Docker hub: <code>docker pull crukcibioinformatics/quantitative_chip_workshop</code>
-</li>
-<li>Run the image: <code>docker run -e PASSWORD=yourpassword -p 8787:8787 crukcibioinformatics/quantitative_chip_workshop</code>
-</li>
-<li>Log in to RStudio at <a href="http://localhost:8787">http://localhost:8787</a> using username <code>rstudio</code> and password <code>yourpassword</code>. For Windows users, you also need to provide your IP address, you can find it using <code>docker-machine ip default</code>.</li>
-<li>Inside the RStudio, run: <code><a href="https://rdrr.io/r/utils/browseVignettes.html">browseVignettes(package = "Quantitative-ChIPseq-Workshop")</a></code>
-</li>
-<li>You can click one of the links: “HTML”, “source”, “R code”</li>
-</ul>
+<a href="#workshop-participation--local-docker-image" class="anchor"></a>Workshop participation – local Docker image</h2>
+<p>If you do <strong>not</strong> have access to the RStudio instance provided by the conference organizers, or you would like to run the Docker image locally and you have a Docker client installed on your machine, you run this workshop locally via:</p>
+<pre><code>docker pull crukcibioinformatics/quantitative_chip_workshop:latest
+docker images
+docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
+<p>Then open a browser and go to the URL <strong>localhost:8787</strong>. Log into RStudio with <strong>username:rstudio</strong> and <strong>password:DiffBind</strong>.</p>
+</div>
+<div id="workshop-participation--local-r-installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#workshop-participation--local-r-installation" class="anchor"></a>Workshop participation – local R installation</h2>
+<p>The workshop uses a Docker container with Bioconductor Release version <code>3.12</code>. If you would like to install Bioconductor on your computer, install R and the required Bioconductor packages, including this workshop package.</p>
+</div>
+<div id="how-to-follow-the-workshop" class="section level2">
+<h2 class="hasAnchor">
+<a href="#how-to-follow-the-workshop" class="anchor"></a>How to follow the workshop</h2>
+<p>First load the workshop package:</p>
+<pre><code><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop">library(QuantitativeChIPseqWorkshop)</a></code></pre>
+<p>There are a number of ways to follow the workshop:</p>
+<div id="follow-the-workshop-in-the-pre-built-html-in-rstudio" class="section level3">
+<h3 class="hasAnchor">
+<a href="#follow-the-workshop-in-the-pre-built-html-in-rstudio" class="anchor"></a>Follow the workshop in the pre-built HTML in RStudio</h3>
+<p>You can open the fully built workshop (with all code and results) in the “Help” pane in RStudio as follows:</p>
+<pre><code><a href="articles/Quantitative-ChIPseq-Workshop.html">vignette("Quantitative-ChIPseq-Workshop","QuantitativeChIPseqWorkshop")</a></code></pre>
+</div>
+<div id="follow-the-workshop-in-the-pre-built-html-in-a-searate-browser-window-or-tab" class="section level3">
+<h3 class="hasAnchor">
+<a href="#follow-the-workshop-in-the-pre-built-html-in-a-searate-browser-window-or-tab" class="anchor"></a>Follow the workshop in the pre-built HTML in a searate Browser window or tab</h3>
+<p>If you are using the Docker image, You can open the fully built workshop (with all code and results) in a browser tab as follows:</p>
+<pre><code><a href="https://rdrr.io/pkg/rstudioapi/man/viewer.html">rstudioapi::viewer(paste(system.file("doc",package="QuantitativeChIPseqWorkshop"),
+                         "Quantitative-ChIPseq-Workshop.html", sep="/"))</a></code></pre>
+<p>It may be helpful to move the tab into its own window so you can see the vignette and the RStudio window at the same time.</p>
+</div>
+<div id="follow-the-workshop-directly-in-the-workshop-mark-down-file" class="section level3">
+<h3 class="hasAnchor">
+<a href="#follow-the-workshop-directly-in-the-workshop-mark-down-file" class="anchor"></a>Follow the workshop directly in the workshop mark-down file</h3>
+<p>You can open the workshop “source” .Rmd file in the RStudio “Source” pane, and follow along, executing each code chunk in sequence, to build it as you go.</p>
+<pre><code><a href="https://rdrr.io/r/utils/file.edit.html">file.edit("vignettes/Quantitative-ChIPseq-Workshop.Rmd")</a></code></pre>
+</div>
 </div>
 <div id="r--bioconductor-packages-used" class="section level2">
 <h2 class="hasAnchor">
@@ -190,30 +218,26 @@
 <td>10m</td>
 </tr>
 <tr class="odd">
-<td>Normalization I</td>
-<td>5m</td>
-</tr>
-<tr class="even">
-<td>GLM model design and contrasts</td>
-<td>10m</td>
-</tr>
-<tr class="odd">
-<td>Normalization II</td>
+<td>Examining and normalizing the binding matrix</td>
 <td>10m</td>
 </tr>
 <tr class="even">
-<td>Reporting</td>
+<td>Modeling and Testing</td>
 <td>5m</td>
 </tr>
 <tr class="odd">
-<td>Plotting</td>
+<td>Examining analysis results</td>
 <td>10m</td>
 </tr>
 <tr class="even">
-<td>Exporting results for downstream analysis</td>
+<td>Multi-factor Design</td>
 <td>5m</td>
 </tr>
 <tr class="odd">
+<td>Normalization discussion</td>
+<td>15m</td>
+</tr>
+<tr class="even">
 <td>Conclusions</td>
 <td>5m</td>
 </tr>
