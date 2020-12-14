@@ -255,8 +255,20 @@ run using a single command (**Do not run this code during the workshop!**):
 result <- dba.analyze(samples)
 ```
 
+This is tells `DiffBind` to run through all the steps of an
+analysis, roughly (**Do not run this code during the workshop!**):
+
+```{r analsteps, eval=FALSE}
+peaks  <- dba(sampleSheet=samples)
+peaks  <- dba.blacklist(peaks)
+counts <- dba.count(peaks)
+counts <- dba.normalize(counts)
+model  <- dba.contrast(counts)
+result <- dba.analyze(model)
+```
+
 Instead, we are going to walk through each of the steps
-of the analysis one at a time.
+of the analysis, one at a time.
 
 First load the experiment into `DiffBind` either by supplying the original
 `.csv` file or using the loaded `samples` dataframe:
