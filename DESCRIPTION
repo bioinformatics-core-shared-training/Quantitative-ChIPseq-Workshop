@@ -1,6 +1,6 @@
 Package: QuantitativeChIPseqWorkshop
 Title: Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person(given = "Rory",
            family = "Stark",

@@ -265,7 +265,8 @@ First load the experiment into `DiffBind` either by supplying the original
 tam.peaks <- dba(sampleSheet="tamoxifen.csv")
 ```
 
-This creates a `DBA` object we've called `tam.peaks`, which can be examined:
+This creates a `DiffBind` object (a `DBA` object) we've called `tam.peaks`,
+which can be examined:
 
 ```{r showtam}
 tam.peaks
@@ -469,7 +470,8 @@ for each sample the peak was called in. The peak intervals are then re-specified
 to be a constant interval upstream and downstream of this summit. 
 The default of `summits=200`, intended for ChIP-seq, results in 401bp peaks 
 (The summit point plus 200bp in each direction). 
-In the second phase reads are re-counted overlapping these intervals.
+In the second phase the alignments are revisited, 
+counting reads overlapping these intervals.
 * **filter** will eliminate consensus peaks with lower than a set threshold
 of counts. The default `filter=1` will filter consensus peaks where there is
 not at least one sample whose RPKM (reads per kilobase per million reads) 
@@ -511,7 +513,7 @@ between each pair of columns in the binding matrix is calculated)
 can be shown using `dba.plotHeatmap()`, which is also the
 default plot:
 
-```{r counthm}
+```{r counthm, fig.height=7}
 plot(tam.counts)
 ```
 
@@ -530,7 +532,7 @@ a PCA plot:
 dba.plotPCA(tam.counts,DBA_REPLICATE, label=DBA_TISSUE)
 ```
 
-### Normalization (deault)
+### Normalization (default)
 
 The next step is to normalize the data.
 Normalization of ChIP and ATAC sequencing data is not always straightforward,
@@ -539,12 +541,12 @@ We will look more closely at these issues in a subsequent section.
 For now we will use the default normalization in `DiffBind`,
 which makes minimal assumptions about the data and seeks to "do no harm". 
 
-First let's make an MA plot of the date before normalization.
+First let's make an MA plot of the data before normalization.
 An MA plot shows how the fold changes between conditions are distributed
 as the mean concentration of reads counts increases.
-For this plot, we'll compare use the sample sin the `Responsive`condition 
+For this plot, we'll use the samples in the `Responsive` condition 
 as the baseline, and see how the samples in the
-`Resistant`condition compare.
+`Resistant` condition compare.
 
 ```{r maraw}
 dba.plotMA(tam.counts, bNormalized=FALSE, sub="Non-Normalized",
@@ -556,8 +558,8 @@ while the the X-axis orders them according to the mean number of
 overlapping read counts for the consensus site,
 and the Y-axis shows the log2 fold change.
 Points above the 0-fold line (blue) demonstrate greater enrichment of reads in
-the `Resistant`condition, while point below the 0-fold line
-are more enriched int he `Responsive` condition.
+the `Resistant` condition, while point below the 0-fold line
+are more enriched in the `Responsive` condition.
 The red curve is a loess fit showing the overall trend in the data.
 
 This plots shows that in the raw data, the `Responsive` condition samples
@@ -568,6 +570,7 @@ is a loss of ER binding in the tamoxifen resistant condition.
 By default, `DiffBind` normalizes only using the full library sizes
 of the samples (total aligned reads in the `.bam`).
 Perform a default normalization and see how the plot changes:
+
 ```{r normdef}
 tam.counts <- dba.normalize(tam.counts)
 dba.plotMA(tam.counts, sub="Normalized (Default)",
@@ -591,7 +594,7 @@ the impact of normalization on the modeling results.
 
 <br>
 
-The core differential analysis in `DiffBind`is performed by one or
+The core differential analysis in `DiffBind` is performed by one or
 more underlying read count modeling Bioconductor packages.
 The default package is `DESeq2` [@Love2014]; 
 the `edgeR` package [@Robinson:2010p249] may be also used either as an
@@ -702,7 +705,7 @@ dba.plotVolcano(tam.model)
 
 We can also re-visit the clustering plots we originally did
 on the full binding matrix, except this time only
-taking differential sites intro consideration:
+taking differential sites into consideration:
 
 ```{r corhmcontrast}
 plot(tam.model, contrast=1)
@@ -770,7 +773,7 @@ tissue types, we now identify
 `r dba.show(tam.model,bContrasts=TRUE)$DB.DESeq2`
 differential sites at the default threshold of `FDR < 0.05`.
 The resulting MA plot shows these are biased towards
-loss of binding the in `Resistant` condition:
+loss of binding in the `Resistant` condition:
 
 ```{r mamulti}
 dba.plotMA(tam.model, contrast=1)
@@ -799,24 +802,25 @@ of efficiency and other biases.
 The default normalization method in `DiffBind` is to look only
 at the relative library sizes (number of aligned reads) 
 of the experimental samples.
-Why don't we use the underlying analysis methods inherent in
-the `DESeq2` (RLE) and `edgeR` (TMM) differential analysis packages?
+Why don't we use the underlying normalization methods inherent in
+the `DESeq2` (RLE, or Relative Log Expression) and 
+`edgeR` (TMM, Trimmed Mean of M-values) differential analysis packages?
 
-Consider the sample experiment. 
+Consider the example experiment. 
 We saw in the first two MA plots that there was a bias towards greater
 read concentration in the `Responsive` condition; 
 this was reduced somewhat, but still remained, after library-size
-normalization, and the  analysis identified
+normalization, and the analysis identified
 more differential sites that gained binding in the `Responsive` condition
-(also seen as binding loss in the `Responsive` condition:)
+(alternatively interpretable as binding loss in the `Responsive` condition:)
 
 ```{r norm2maplots1} 
 dba.plotMA(tam.model,bNormalized=FALSE, th=0, sub="Non-Normalized")
 dba.plotMA(tam.model,bNormalized=TRUE, sub="Normalized: Library Size")
 ```
 
-Let's see what happens if we normalizing using the "native" 
-method in `DESeq2`, RLE:
+Let's see what happens if we normalize against the binding matrix (`RiP`)
+using the "native" method in `DESeq2`, RLE:
 
 ```{r normRLERiP, collapse=TRUE} 
 tam.model <- dba.normalize(tam.model, normalize="RLE")
@@ -827,7 +831,7 @@ dba.plotMA(tam.model,bNormalized=TRUE, sub="Normalized: RLE [RiP]")
 The result is quite different!
 The read concentrations are closely balanced and fit near the 
 zero log fold change line. 
-The differential sites are also more balance between those losing
+The differential sites are also more balanced between those losing
 and gaining affinity in the `Resistant` condition:
 
 ```{r normgainloss} 
@@ -843,16 +847,15 @@ Which is the "correct" analysis?
 
 It turns out that for the type of data we are dealing with in
 DNA enrichment assays, the reads that are used as the reference
-for normalizing are more important that the  normalization method itself.
+for normalizing are more important than the normalization method itself.
 While in RNA-seq experiments the expression matrix can be normalized
-directly, based on the reads that uniquely overlap genes or transcripts
-(known as "Reads-in-Peaks", or "RiP"),
+directly, based on the reads that uniquely overlap genes or transcripts,
 this does not apply to a binding matrix based on a consensus peakset.
 
-In a non-peak bases analysis such as is done using 
+In a windowing based analysis such as is done using 
 the `csaw` package[@lun2016csaw],
 where there is no consensus binding matrix, this issue
-was addressed by using a large "bins" of reads across the genome.
+was addressed by using large (>10,000bp) "bins" of reads across the genome.
 The idea is that the bins, being so much larger in size than
 binding sites or stretches of open chromatin, contain mostly
 "background" reads, and present a less biased way of providing
@@ -904,7 +907,7 @@ cor <- dba.plotHeatmap(norm.comp)
 ```
 
 This shows how the results cluster.
-While all the analysis have a core sets of sites in common 
+While all the analysis have a core set of sites in common 
 (the lowest correlation between analyses is `r min(cor)`,
 there are two distinct clusters driven not by the normalization methods,
 but by the choice of reference reads.
@@ -918,6 +921,7 @@ the same results when using the same reference reads.
 
 Next we can look at differences in the differential sites themselves
 by plotting a heatmap of the log fold changes (LFC) of each site:
+
 ```{r normheatmap, fig.height=7}
 hmap <- colorRampPalette(c("red", "black", "green"))(n = 7)
 dba.plotHeatmap(norm.comp, correlations=FALSE, 
@@ -926,7 +930,7 @@ dba.plotHeatmap(norm.comp, correlations=FALSE,
                 key.title = "LFC", main = "DESeq2 Differentially Bound Sites")
 ```
 
-Sites in green are ones that Gain binding intensity in the `Resistant` condition,
+Sites in green are ones that gain binding intensity in the `Resistant` condition,
 while those in red lose binding intensity.
 Sites in black are ones that are not identified in a specific analysis.
 This plot again shows how the analyses cluster first by
@@ -939,7 +943,7 @@ depending on which normalization scheme is chosen.
 
 ## Spike-ins and parallel factors 
 
-While it is beyond the scope of this workshop, it is worth nothing
+While it is beyond the scope of this workshop, it is worth noting
 that alternative sets of reference reads can be used.
 `DiffBind` supports the use of spike-ins, where the reads
 used to normalize the libraries are based on those aligned
@@ -958,6 +962,7 @@ for guidance on how to perform such normalization.
 <br><br><br><br>
 
 # sessionInfo()
+
 ```{r sessioinfo, collapse=TRUE}
 sessionInfo()
 ```
