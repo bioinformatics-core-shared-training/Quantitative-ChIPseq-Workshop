@@ -150,7 +150,7 @@ setwd("inst/extdata")
 
 The first step in a quantitative analysis is setting up the experiment
 so that `DiffBind` has all the information it needs.
-For many project, this can be the most time-consuming step!
+For many projects, this can be the most time-consuming step!
 
 ## What do you need to do a quantitiative analysis of an experiment?
 
@@ -229,13 +229,13 @@ There are four breast-cancer cell lines involved, representing
 two experimental conditions:
 cells that either `Responsive` to the drug tamoxifen, or those that
 are `Resistant` to tamoxifen. 
-Note that one cell line (MCF7) is marked as being both `Resposnsive`and `Resistant`;
+Note that one cell line (MCF7) is marked as being both `Responsive`and `Resistant`;
 these cells are naturally `Responsive`, but a `Resistant` version has
 been derived by treating with tamoxifen until only resistant cells remain.
 The goal of the experiment is to examine changes in ER binding patterns
 between the two conditions.
 
-There are seven replicates of `Responsive` samples, encompassing three 
+There are seven `Responsive` replicates, encompassing three 
 different cell lines, with two or three replicates for each `Responsive`cell line.
 There are four replicates of `Resistant` samples in two cell lines,
 each with two replicates.
@@ -252,7 +252,7 @@ At this point a complete default end-to-end analysis could be
 run using a single command (**Do not run this code during the workshop!**): 
 
 ```{r oneshot, eval=FALSE}
-result <- dba(samples)
+result <- dba.analyze(samples)
 ```
 
 Instead, we are going to walk through each of the steps
@@ -260,6 +260,7 @@ of the analysis one at a time.
 
 First load the experiment into `DiffBind` either by supplying the original
 `.csv` file or using the loaded `samples` dataframe:
+
 ```{r loadsamples, collapse=TRUE}
 tam.peaks <- dba(sampleSheet="tamoxifen.csv")
 ```
@@ -286,7 +287,7 @@ called in at least two samples.
 Now that the peaks are loaded, it is good practice to filter out
 peaks called in problematic regions.
 This is accomplished using a standard, published `Blacklist` of areas in 
-in reference genome known to be problematic\cite{amemiya2019blacklist}.
+in reference genome known to be problematic.
 The best known lists have been identified
 as part of the ENCODE project [@amemiya2019blacklist] and are
 available for a variety of reference genomes and genome versions.
@@ -296,7 +297,7 @@ the `dba.blacklist()` function.
 In addition, if control alignments are available for an experiment,
 experiment-specific exclusion lists can be generated reflecting
 the tissue and experimental conditions used.
-We call these `Greylists` and are generated using
+We call these `Greylists`, and thet are generated using
 the `GreyListChIP`package [@brown2015greylistchip].
 The idea is to analyze libraries that are not
 meant to show systematic enrichment (such as Inputs, in which no
@@ -305,7 +306,7 @@ where a disproportionate degree of signal is present.
 
 ## Applying a blacklist
 
-If an ENCODE blacklists exists for the reference genome used to
+If an ENCODE blacklist exists for the reference genome used to
 align the experimental data, it can be applied
 automatically using the `dba.blacklist()` function.
 The reference genome is automatically detected from the supplied
@@ -365,6 +366,7 @@ and we can apply them directly:
 data(tamoxifen_greylist)
 names(tamoxifen.greylist)
 ```
+
 In this object, there is a "master" greylist formed from the 
 individual greylist (computed one per control):
 
@@ -422,7 +424,8 @@ More complex schemes, such as forming a consensus peak set separately from
 the replicates for each condition and then taking the union of these, are
 also possible.
 
-The default consensus peak set can be retrieved:
+The default consensus peak set, which includes merged peaks that overlap in
+at least two samples, can be retrieved:
 
 ```{r consensus}
 consensus.peaks <- dba.peakset(tam.peaks, bRetrieve=TRUE)

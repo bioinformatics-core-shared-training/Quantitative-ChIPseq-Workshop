@@ -1,6 +1,6 @@
 Package: QuantitativeChIPseqWorkshop
 Title: Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays
-Version: 0.0.7
+Version: 0.1.0
 Authors@R: 
     person(given = "Rory",
            family = "Stark",
@@ -14,13 +14,13 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.0
 Depends: R (>= 4.0.0),
-    Biobase
+    Biobase,
+    DiffBind
 Suggests: 
     knitr,
     rmarkdown,
     bookdown,
     pkgdown,
-    DiffBind,
     csaw,
     GreyListChIP
 URL: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop
