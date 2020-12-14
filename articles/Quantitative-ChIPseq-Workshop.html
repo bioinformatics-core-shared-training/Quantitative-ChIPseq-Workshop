@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">QuantitativeChIPseqWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -281,9 +281,17 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <p>At this point a complete default end-to-end analysis could be run using a single command (<strong>Do not run this code during the workshop!</strong>):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">samples</span><span class="op">)</span></code></pre></div>
-<p>Instead, we are going to walk through each of the steps of the analysis one at a time.</p>
-<p>First load the experiment into <code>DiffBind</code> either by supplying the original <code>.csv</code> file or using the loaded <code>samples</code> dataframe:</p>
+<p>This is tells <code>DiffBind</code> to run through all the steps of an analysis, roughly (<strong>Do not run this code during the workshop!</strong>):</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">peaks</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.html">dba</a></span><span class="op">(</span>sampleSheet<span class="op">=</span><span class="va">samples</span><span class="op">)</span>
+<span class="va">peaks</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">peaks</span><span class="op">)</span>
+<span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count</a></span><span class="op">(</span><span class="va">peaks</span><span class="op">)</span>
+<span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span>
+<span class="va">model</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span>
+<span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span></code></pre></div>
+<p>Instead, we are going to walk through each of the steps of the analysis, one at a time.</p>
+<p>First load the experiment into <code>DiffBind</code> either by supplying the original <code>.csv</code> file or using the loaded <code>samples</code> dataframe:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.html">dba</a></span><span class="op">(</span>sampleSheet<span class="op">=</span><span class="st">"tamoxifen.csv"</span><span class="op">)</span>
 <span class="co">## BT4741 BT474 ER Resistant Full-Media 1 bed</span>
 <span class="co">## BT4742 BT474 ER Resistant Full-Media 2 bed</span>
@@ -297,7 +305,7 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <span class="co">## ZR751 ZR75 ER Responsive Full-Media 1 bed</span>
 <span class="co">## ZR752 ZR75 ER Responsive Full-Media 2 bed</span></code></pre></div>
 <p>This creates a <code>DiffBind</code> object (a <code>DBA</code> object) we’ve called <code>tam.peaks</code>, which can be examined:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.peaks</span></code></pre></div>
 <pre><code>## 11 Samples, 2845 sites in matrix (3795 total):
 ##        ID Tissue Factor  Condition  Treatment Replicate Intervals
@@ -326,7 +334,7 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <h2 class="hasAnchor">
 <a href="#applying-a-blacklist" class="anchor"></a>Applying a blacklist</h2>
 <p>If an ENCODE blacklist exists for the reference genome used to align the experimental data, it can be applied automatically using the <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist()</a></code> function. The reference genome is automatically detected from the supplied <code>.bam</code> files.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span>, blacklist<span class="op">=</span><span class="cn">TRUE</span>, greylist<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">## Genome detected: Hsapiens.UCSC.hg19</span>
 <span class="co">## Applying blacklist...</span>
@@ -352,9 +360,9 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <a href="#generating-and-applying-a-greylist" class="anchor"></a>Generating and applying a greylist</h2>
 <p>Greylists can be automatically generated from the controls as <code>DiffBind</code> provides an interface to the <code>GreyListChIP</code> package. This can be a time-consuming operation, as each of the controls is analyzed for anomalous regions.</p>
 <p>The blacklist can be applied, and the greylists generated and applied, in a single step <em>NB: This is a compute-intensive step that takes too long to run in the workshop</em> <em>Docker instance;</em> <strong>do not run the following chunk</strong> <em>if you are using the</em> <em>workshop Docker image</em>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Genome detected: Hsapiens.UCSC.hg19</span>
 <span class="co">## Applying blacklist...</span>
 <span class="co">## Removed: 3 of 14102 intervals.</span>
@@ -378,12 +386,12 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <span class="co">## Removed: 420 of 14099 intervals.</span>
 <span class="co">## Removed: 52 merged (of 3795) and 50 (of 2845) consensus.</span></code></pre></div>
 <p><strong>To save time</strong>, greylists for the example data set are included, and we can apply them directly:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tamoxifen_greylist</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">tamoxifen.greylist</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "master"   "controls"</code></pre>
 <p>In this object, there is a “master” greylist formed from the individual greylist (computed one per control):</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tamoxifen.greylist</span><span class="op">$</span><span class="va">master</span></code></pre></div>
 <pre><code>## GRanges object with 72 ranges and 0 metadata columns:
 ##        seqnames            ranges strand
@@ -401,11 +409,11 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 ##   [72]    chr18 77377859-77380930      *
 ##   -------
 ##   seqinfo: 1 sequence from hg19 genome</code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">tamoxifen.greylist</span><span class="op">$</span><span class="va">controls</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "BT474c" "MCF7c"  "T47Dc"  "TAMRc"  "ZR75c"</code></pre>
 <p>Now we can apply it:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.blacklist.html">dba.blacklist</a></span><span class="op">(</span><span class="va">tam.peaks</span>, greylist<span class="op">=</span><span class="va">tamoxifen.greylist</span><span class="op">)</span>
 <span class="co">## Genome detected: Hsapiens.UCSC.hg19</span>
 <span class="co">## Applying blacklist...</span>
@@ -426,18 +434,18 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <h2 class="hasAnchor">
 <a href="#consensus-peak-set" class="anchor"></a>Consensus peak set</h2>
 <p>One straightforward way to determine the consensus peaks is to consider genomic intervals that are identified as peaks in one or more of the samples. It can be helpful to make a plot of how many peaks overlap in how many samples:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">olap.rate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.overlap.html">dba.overlap</a></span><span class="op">(</span><span class="va">tam.peaks</span>, mode<span class="op">=</span><span class="va">DBA_OLAP_RATE</span><span class="op">)</span>
 <span class="va">olap.rate</span></code></pre></div>
 <pre><code>##  [1] 3743 2795 1731 1350 1037  782  621  455  362  186  119</code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">olap.rate</span>, xlab<span class="op">=</span><span class="st">"Overlapping samples"</span>, ylab<span class="op">=</span><span class="st">"Overlapping peaks"</span>, type<span class="op">=</span><span class="st">"b"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/rateplot-1.png" width="100%"></p>
 <p>This shows that there are 3743 total merged peaks, representing the union of all intervals. At the other extreme, there are 119 peaks that overlap in all 11 samples, representing the intersection of all the samples.</p>
 <p>Which should we chose? Given the rigor of the underlying statistical analysis, we can choose a more inclusive consensus set. The default is to make the consensus peak set using peaks identified in at least two samples (2795).</p>
 <p>More complex schemes, such as forming a consensus peak set separately from the replicates for each condition and then taking the union of these, are also possible.</p>
 <p>The default consensus peak set, which includes merged peaks that overlap in at least two samples, can be retrieved:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">consensus.peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.peakset.html">dba.peakset</a></span><span class="op">(</span><span class="va">tam.peaks</span>, bRetrieve<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">consensus.peaks</span><span class="op">[</span>,<span class="fl">0</span><span class="op">]</span></code></pre></div>
 <pre><code>## GRanges object with 2795 ranges and 0 metadata columns:
@@ -462,14 +470,14 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <a href="#counting-overlapping-reads" class="anchor"></a>Counting overlapping reads</h2>
 <p>The next step is to form the binding matrix using the consensus peak and computing overlapping read counts for each peak in each sample, <em>whether or not it was called as a peak in that sample.</em></p>
 <p>The function used to accomplish this is <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count()</a></code>: <em>NB: This is a compute-intensive step that takes too long to run in the workshop</em> <em>Docker instance;</em> <strong>do not run the following chunk</strong> <em>if you are using the</em> <em>workshop Docker image</em>:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tam.counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count</a></span><span class="op">(</span><span class="va">tam.peaks</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tam.counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count</a></span><span class="op">(</span><span class="va">tam.peaks</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Computing summits...</span>
 <span class="co">## Re-centering peaks...</span>
 <span class="co">## Reads will be counted as Single-end.</span></code></pre></div>
 <p>You can, alternatively, obtain the results as follows:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">tamoxifen_counts</span><span class="op">)</span>
 <span class="va">tam.counts</span> <span class="op">&lt;-</span> <span class="va">tamoxifen</span></code></pre></div>
 <p><code><a href="https://rdrr.io/pkg/DiffBind/man/dba.count.html">dba.count()</a></code> takes a number of parameter to control it’s default behavior. Here is a list of some important ones:</p>
@@ -486,7 +494,7 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <strong>mapQCth</strong> sets a threshold for ignoring low-quality alignment. The default value of <code>mapQCth=15</code> results in all multi-mapped reads (reads that can map to multiple locations in the genome) being ignored.</li>
 </ul>
 <p>After counting the reads, the DBA object reflects the consensus peak set rather than the original peak data:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.counts</span></code></pre></div>
 <pre><code>## 11 Samples, 2845 sites in matrix:
 ##        ID Tissue Factor  Condition  Treatment Replicate   Reads FRiP
@@ -512,12 +520,12 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <a href="#plots-to-look-for-a-batch-effect" class="anchor"></a>Plots to look for a batch effect</h3>
 <p>Of particular interest is the presence of technical effects in the experiment, such as batch effects.</p>
 <p>We can look at how the samples cluster using heatmaps and PCA plots. A correlation heatmap (in which correlations values between each pair of columns in the binding matrix is calculated) can be shown using <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap()</a></code>, which is also the default plot:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">tam.counts</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/counthm-1.png" width="100%"></p>
 <p>This shows a very high correlation between the replicate for each sample type, which indicates that there is not a large batch effect. The main clustering divides the samples into those derived from the MCF7 cell line, which are all highly correlated, with the other cell lines clustering together. At this point, we do not see a natural clustering into tamoxifen <code>Responsive</code> and <code>Resistant</code> clusters.</p>
 <p>We can verify that there is no obvious batch effect with a PCA plot:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotPCA.html">dba.plotPCA</a></span><span class="op">(</span><span class="va">tam.counts</span>,<span class="va">DBA_REPLICATE</span>, label<span class="op">=</span><span class="va">DBA_TISSUE</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/countPCA-1.png" width="100%"></p>
 </div>
@@ -526,7 +534,7 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <a href="#normalization-default" class="anchor"></a>Normalization (default)</h3>
 <p>The next step is to normalize the data. Normalization of ChIP and ATAC sequencing data is not always straightforward, especially compared to normalization of RNA-seq data. We will look more closely at these issues in a subsequent section. For now we will use the default normalization in <code>DiffBind</code>, which makes minimal assumptions about the data and seeks to “do no harm”.</p>
 <p>First let’s make an MA plot of the data before normalization. An MA plot shows how the fold changes between conditions are distributed as the mean concentration of reads counts increases. For this plot, we’ll use the samples in the <code>Responsive</code> condition as the baseline, and see how the samples in the <code>Resistant</code> condition compare.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.counts</span>, bNormalized<span class="op">=</span><span class="cn">FALSE</span>, sub<span class="op">=</span><span class="st">"Non-Normalized"</span>,
            contrast<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Resistant<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Resistant</span>,
                          Responsive<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Responsive</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -534,7 +542,7 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 overlapping read counts for the consensus site, and the Y-axis shows the log2 fold change. Points above the 0-fold line (blue) demonstrate greater enrichment of reads in the <code>Resistant</code> condition, while point below the 0-fold line are more enriched in the <code>Responsive</code> condition. The red curve is a loess fit showing the overall trend in the data.</p>
 <p>This plots shows that in the raw data, the <code>Responsive</code> condition samples have overall higher concentration of overlapping reads in consensus peaks. This could either be a technical bias, or an indication that there is a loss of ER binding in the tamoxifen resistant condition.</p>
 <p>By default, <code>DiffBind</code> normalizes only using the full library sizes of the samples (total aligned reads in the <code>.bam</code>). Perform a default normalization and see how the plot changes:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.counts</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.counts</span>, sub<span class="op">=</span><span class="st">"Normalized (Default)"</span>,
            contrast<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Resistant<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Resistant</span>,
@@ -555,11 +563,11 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#default-model" class="anchor"></a>Default model</h2>
 <p>The <code>DiffBind</code> function <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast()</a></code> is used to specify the model and establish contrasts to be tested against the model. A default model and contrasts(s) can easily be established (note we explicitly specify that the baseline Condition should be <code>Responsive</code>):</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast</a></span><span class="op">(</span><span class="va">tam.counts</span>,
                           reorderMeta<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Condition<span class="op">=</span><span class="st">"Responsive"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## Computing results names...</code></pre>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span></code></pre></div>
 <pre><code>## 11 Samples, 2845 sites in matrix:
 ##        ID Tissue Factor  Condition  Treatment Replicate   Reads FRiP
@@ -584,7 +592,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#fitting-and-testing" class="anchor"></a>Fitting and testing</h2>
 <p>With the design formula in place, and a contrast established, the model can be fit with <code>DESeq2</code> and tests applied for the contrast:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="co">## Analyzing...</span>
 <span class="co">## gene-wise dispersion estimates</span>
@@ -606,7 +614,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#reporting-obtaining-differential-sites" class="anchor"></a>Reporting: obtaining differential sites</h2>
 <p>The differential sites may be retrieved as a <code>GRanges</code> object:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.report.html">dba.report</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="va">tam.db</span></code></pre></div>
 <pre><code>## GRanges object with 246 ranges and 6 metadata columns:
@@ -654,10 +662,10 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <strong>FDR</strong>: multiple-testing corrected significance value for the comparison, as computed by <code>DESeq2</code>.</li>
 </ul>
 <p>We can look at the balance between Gain and Loss sites:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">tam.db</span><span class="op">$</span><span class="va">Fold</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 64</code></pre>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">tam.db</span><span class="op">$</span><span class="va">Fold</span><span class="op">&lt;</span><span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 182</code></pre>
 <p>The report object can now be used for downstream analysis, such as motif analysis, annotation to genomic features, etc.</p>
@@ -666,7 +674,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#plotting-ma-plot" class="anchor"></a>Plotting: MA plot</h2>
 <p>After an analysis, it is useful to generate an MA plot with the differential sites superimposed:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/macontrast-1.png" width="100%"></p>
 </div>
@@ -674,7 +682,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#plotting-volcano-plot" class="anchor"></a>Plotting: Volcano plot</h2>
 <p>Similar to an MA plot, a volcano plot shows the log fold change (on the X-axis instead of the Y-axis), compared to the inverse of the FDR on the Y-axis, to show how FDR and LFC are related:</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotVolcano.html">dba.plotVolcano</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/volcano-1.png" width="100%"></p>
 </div>
@@ -682,7 +690,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#plotting-clustering-correlation-heatmap" class="anchor"></a>Plotting: Clustering correlation heatmap</h2>
 <p>We can also re-visit the clustering plots we originally did on the full binding matrix, except this time only taking differential sites into consideration:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/corhmcontrast-1.png" width="100%"></p>
 <p>As we would hope, the differential sites separate the samples into two clusters, one <code>Resistant</code> and one <code>Responsive</code>.</p>
@@ -691,7 +699,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#plotting-pca-plot" class="anchor"></a>Plotting: PCA plot</h2>
 <p>Likewise, a PCA plot based only on the differential sites shows how the samples can be separated by condition:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotPCA.html">dba.plotPCA</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span>, label<span class="op">=</span><span class="va">DBA_TISSUE</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/pcacontrast-1.png" width="100%"></p>
 </div>
@@ -699,7 +707,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h2 class="hasAnchor">
 <a href="#plotting-read-concentration-heatmap" class="anchor"></a>Plotting: Read concentration heatmap</h2>
 <p>In addition to the correlation heatmap, a plot showing the read concentrations can also be generated. In this case we scale the read concentrations for each site, to emphasize the difference between the lowest and highest values:</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"green"</span><span class="op">)</span><span class="op">)</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">13</span><span class="op">)</span>
 <span class="va">readscores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span>, correlations<span class="op">=</span><span class="cn">FALSE</span>,
                               scale<span class="op">=</span><span class="st">"row"</span>, colScheme <span class="op">=</span> <span class="va">hmap</span><span class="op">)</span></code></pre></div>
@@ -713,20 +721,20 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <p><br></p>
 <p>The default design and contrasts may not be the correct ones, as they may not be focused on the factors of interest. In the current case, it turns out that it is important to use a multi-factor design in order to model the use of different cell lines with each condition, and most importantly the fact that a single cell origin (MCF7) is used across conditions.</p>
 <p>In the current case, we will change the model to the “correct” multi-factor design before proceeding:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.contrast.html">dba.contrast</a></span><span class="op">(</span><span class="va">tam.model</span>, design<span class="op">=</span><span class="st">"~Tissue + Condition"</span><span class="op">)</span>
 <span class="co">## Replacing design and removing analysis.</span>
 <span class="co">## Computing results names...</span></code></pre></div>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.show.html">dba.show</a></span><span class="op">(</span><span class="va">tam.model</span>,bDesign<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">## [1] "~Tissue + Condition"</span></code></pre></div>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="co">## Analyzing...</span>
 <span class="co">## gene-wise dispersion estimates</span>
 <span class="co">## mean-dispersion relationship</span>
 <span class="co">## final dispersion estimates</span></code></pre></div>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span>
 <span class="co">## 11 Samples, 2845 sites in matrix:</span>
 <span class="co">##        ID Tissue Factor  Condition  Treatment Replicate   Reads FRiP</span>
@@ -746,7 +754,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <span class="co">##      Factor     Group Samples     Group2 Samples2 DB.DESeq2</span>
 <span class="co">## 1 Condition Resistant       4 Responsive        7       783</span></code></pre></div>
 <p>With the multi-factor model taking into account the underlying tissue types, we now identify 783 differential sites at the default threshold of <code>FDR &lt; 0.05</code>. The resulting MA plot shows these are biased towards loss of binding in the <code>Resistant</code> condition:</p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/mamulti-1.png" width="100%"></p>
 <p><br><br><br><br></p>
@@ -761,14 +769,14 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <a href="#core-normalization-methods" class="anchor"></a>Core normalization methods</h2>
 <p>The default normalization method in <code>DiffBind</code> is to look only at the relative library sizes (number of aligned reads) of the experimental samples. Why don’t we use the underlying normalization methods inherent in the <code>DESeq2</code> (RLE, or Relative Log Expression) and <code>edgeR</code> (TMM, Trimmed Mean of M-values) differential analysis packages?</p>
 <p>Consider the example experiment. We saw in the first two MA plots that there was a bias towards greater read concentration in the <code>Responsive</code> condition; this was reduced somewhat, but still remained, after library-size normalization, and the analysis identified more differential sites that gained binding in the <code>Responsive</code> condition (alternatively interpretable as binding loss in the <code>Responsive</code> condition:)</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">FALSE</span>, th<span class="op">=</span><span class="fl">0</span>, sub<span class="op">=</span><span class="st">"Non-Normalized"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/norm2maplots1-1.png" width="100%"></p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">TRUE</span>, sub<span class="op">=</span><span class="st">"Normalized: Library Size"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/norm2maplots1-2.png" width="100%"></p>
 <p>Let’s see what happens if we normalize against the binding matrix (<code>RiP</code>) using the “native” method in <code>DESeq2</code>, RLE:</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.model</span>, normalize<span class="op">=</span><span class="st">"RLE"</span><span class="op">)</span>
 <span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="co">## Analyzing...</span>
@@ -778,11 +786,11 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">TRUE</span>, sub<span class="op">=</span><span class="st">"Normalized: RLE [RiP]"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normRLERiP-1.png" width="100%"></p>
 <p>The result is quite different! The read concentrations are closely balanced and fit near the zero log fold change line. The differential sites are also more balanced between those losing and gaining affinity in the <code>Resistant</code> condition:</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.report.html">dba.report</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">rep</span><span class="op">$</span><span class="va">Fold</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 402</code></pre>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">rep</span><span class="op">$</span><span class="va">Fold</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 469</code></pre>
 <p>What accounts for the difference? Which is the “correct” analysis?</p>
@@ -792,10 +800,10 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <a href="#reference-reads" class="anchor"></a>Reference reads</h2>
 <p>It turns out that for the type of data we are dealing with in DNA enrichment assays, the reads that are used as the reference for normalizing are more important than the normalization method itself. While in RNA-seq experiments the expression matrix can be normalized directly, based on the reads that uniquely overlap genes or transcripts, this does not apply to a binding matrix based on a consensus peakset.</p>
 <p>In a windowing based analysis such as is done using the <code>csaw</code> package<span class="citation">(Lun and Smyth 2016)</span>, where there is no consensus binding matrix, this issue was addressed by using large (&gt;10,000bp) “bins” of reads across the genome. The idea is that the bins, being so much larger in size than binding sites or stretches of open chromatin, contain mostly “background” reads, and present a less biased way of providing a read count matrix on which to base normalization calculations. This “background” method is included in <code>DiffBind</code> <em>NB: This is a compute-intensive step, however if you have loaded the</em> <em>pre-computed counts, these already include the background reads</em> <em>so this operation may be safely run</em>:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.model</span>, normalize<span class="op">=</span><span class="st">"RLE"</span>,
                            background<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="co">## Analyzing...</span>
 <span class="co">## gene-wise dispersion estimates</span>
@@ -818,7 +826,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <li>TMM (native to <code>edgeR</code>) normalization based on background bins (<code>TMM_BG</code>)</li>
 </ol>
 <p>There is an R script in the <code>inst/scripts</code> directory called <code>compare_norm.R</code>, that performs all six of the normalization schemes, performs a <code>DESeq2</code> analysis on each, and collects the differential sites into a report-based DBA object that can be loaded as follows:</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">norm.comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.load.html">dba.load</a></span><span class="op">(</span><span class="st">"norm_comp"</span><span class="op">)</span>
 <span class="co">## Warning: Loading DBA object from a previous version -- updating...</span>
 <span class="va">norm.comp</span>
@@ -831,12 +839,12 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <span class="co">## 5  TMM_RiP                  TMM             RiP          DESeq2       911</span>
 <span class="co">## 6   TMM_BG                  TMM              BG          DESeq2       689</span></code></pre></div>
 <p>We can look at the differences in a couple of ways. One is to consider how closely correlated are the resulting differential sites:</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap</a></span><span class="op">(</span><span class="va">norm.comp</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normcorplot-1.png" width="100%"></p>
 <p>This shows how the results cluster. While all the analysis have a core set of sites in common (the lowest correlation between analyses is 0.82, there are two distinct clusters driven not by the normalization methods, but by the choice of reference reads. One cluster uses <em>all</em> the reads (background bins <code>BG</code> or full library size <code>full</code>), while the other cluster normalizes based only on reads in the binding matrix (<code>RiP</code>). The least important difference is the choice of normalization methods: <code>edgeR</code>’s TMM method and <code>DESeq2</code>’s RLE method produce essentially the same results when using the same reference reads.</p>
 <p>Next we can look at differences in the differential sites themselves by plotting a heatmap of the log fold changes (LFC) of each site:</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"green"</span><span class="op">)</span><span class="op">)</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap</a></span><span class="op">(</span><span class="va">norm.comp</span>, correlations<span class="op">=</span><span class="cn">FALSE</span>, 
                 bLog<span class="op">=</span><span class="cn">FALSE</span>, colScheme<span class="op">=</span><span class="va">hmap</span>, 
@@ -864,7 +872,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <div id="sessioninfo" class="section level1">
 <h1 class="hasAnchor">
 <a href="#sessioninfo" class="anchor"></a>sessionInfo()</h1>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">## R version 4.0.3 (2020-10-10)</span>
 <span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
