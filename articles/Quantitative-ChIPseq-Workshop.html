@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">QuantitativeChIPseqWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
       </span>
     </div>
 
@@ -45,7 +45,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -68,7 +68,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop">
-    <span class="fa fa-github"></span>
+    <span class="fas fa-github"></span>
      
   </a>
 </li>
@@ -82,8 +82,7 @@
 
       
 
-      </header><script src="Quantitative-ChIPseq-Workshop_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="Quantitative-ChIPseq-Workshop_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="Quantitative-ChIPseq-Workshop_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="Quantitative-ChIPseq-Workshop_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Workshop: Quantitative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays</h1>
@@ -297,7 +296,7 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <span class="co">## MCF7r2 MCF7 ER Resistant Full-Media 2 bed</span>
 <span class="co">## ZR751 ZR75 ER Responsive Full-Media 1 bed</span>
 <span class="co">## ZR752 ZR75 ER Responsive Full-Media 2 bed</span></code></pre></div>
-<p>This creates a <code>DBA</code> object we’ve called <code>tam.peaks</code>, which can be examined:</p>
+<p>This creates a <code>DiffBind</code> object (a <code>DBA</code> object) we’ve called <code>tam.peaks</code>, which can be examined:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.peaks</span></code></pre></div>
 <pre><code>## 11 Samples, 2845 sites in matrix (3795 total):
@@ -478,7 +477,7 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <li>
 <strong>peaks</strong> accepts a consensus peak set. We could have used the peak set retrieved above by specifying <code>peaks=consensus.peaks</code>.</li>
 <li>
-<strong>summits</strong> activates a two-stage counting process. In the first stage, a “summit” is computed for each peak based on the read pileups at each base for each sample the peak was called in. The peak intervals are then re-specified to be a constant interval upstream and downstream of this summit. The default of <code>summits=200</code>, intended for ChIP-seq, results in 401bp peaks (The summit point plus 200bp in each direction). In the second phase reads are re-counted overlapping these intervals.</li>
+<strong>summits</strong> activates a two-stage counting process. In the first stage, a “summit” is computed for each peak based on the read pileups at each base for each sample the peak was called in. The peak intervals are then re-specified to be a constant interval upstream and downstream of this summit. The default of <code>summits=200</code>, intended for ChIP-seq, results in 401bp peaks (The summit point plus 200bp in each direction). In the second phase the alignments are revisited, counting reads overlapping these intervals.</li>
 <li>
 <strong>filter</strong> will eliminate consensus peaks with lower than a set threshold of counts. The default <code>filter=1</code> will filter consensus peaks where there is not at least one sample whose RPKM (reads per kilobase per million reads) is greater than 1.</li>
 <li>
@@ -522,17 +521,17 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotPCA.html">dba.plotPCA</a></span><span class="op">(</span><span class="va">tam.counts</span>,<span class="va">DBA_REPLICATE</span>, label<span class="op">=</span><span class="va">DBA_TISSUE</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/countPCA-1.png" width="100%"></p>
 </div>
-<div id="normalization-deault" class="section level3">
+<div id="normalization-default" class="section level3">
 <h3 class="hasAnchor">
-<a href="#normalization-deault" class="anchor"></a>Normalization (deault)</h3>
+<a href="#normalization-default" class="anchor"></a>Normalization (default)</h3>
 <p>The next step is to normalize the data. Normalization of ChIP and ATAC sequencing data is not always straightforward, especially compared to normalization of RNA-seq data. We will look more closely at these issues in a subsequent section. For now we will use the default normalization in <code>DiffBind</code>, which makes minimal assumptions about the data and seeks to “do no harm”.</p>
-<p>First let’s make an MA plot of the date before normalization. An MA plot shows how the fold changes between conditions are distributed as the mean concentration of reads counts increases. For this plot, we’ll compare use the sample sin the <code>Responsive</code>condition as the baseline, and see how the samples in the <code>Resistant</code>condition compare.</p>
+<p>First let’s make an MA plot of the data before normalization. An MA plot shows how the fold changes between conditions are distributed as the mean concentration of reads counts increases. For this plot, we’ll use the samples in the <code>Responsive</code> condition as the baseline, and see how the samples in the <code>Resistant</code> condition compare.</p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.counts</span>, bNormalized<span class="op">=</span><span class="cn">FALSE</span>, sub<span class="op">=</span><span class="st">"Non-Normalized"</span>,
            contrast<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Resistant<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Resistant</span>,
                          Responsive<span class="op">=</span><span class="va">tam.counts</span><span class="op">$</span><span class="va">masks</span><span class="op">$</span><span class="va">Responsive</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/maraw-1.png" width="100%"> In this plot, each of the consensus site is a point (smoothed), while the the X-axis orders them according to the mean number of<br>
-overlapping read counts for the consensus site, and the Y-axis shows the log2 fold change. Points above the 0-fold line (blue) demonstrate greater enrichment of reads in the <code>Resistant</code>condition, while point below the 0-fold line are more enriched int he <code>Responsive</code> condition. The red curve is a loess fit showing the overall trend in the data.</p>
+overlapping read counts for the consensus site, and the Y-axis shows the log2 fold change. Points above the 0-fold line (blue) demonstrate greater enrichment of reads in the <code>Resistant</code> condition, while point below the 0-fold line are more enriched in the <code>Responsive</code> condition. The red curve is a loess fit showing the overall trend in the data.</p>
 <p>This plots shows that in the raw data, the <code>Responsive</code> condition samples have overall higher concentration of overlapping reads in consensus peaks. This could either be a technical bias, or an indication that there is a loss of ER binding in the tamoxifen resistant condition.</p>
 <p>By default, <code>DiffBind</code> normalizes only using the full library sizes of the samples (total aligned reads in the <code>.bam</code>). Perform a default normalization and see how the plot changes:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
@@ -551,7 +550,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <h1 class="hasAnchor">
 <a href="#modeling-and-testing" class="anchor"></a>Modeling and testing</h1>
 <p><br></p>
-<p>The core differential analysis in <code>DiffBind</code>is performed by one or more underlying read count modeling Bioconductor packages. The default package is <code>DESeq2</code> <span class="citation">(Love, Huber, and Anders 2014)</span>; the <code>edgeR</code> package <span class="citation">(Robinson, McCarthy, and Smyth 2010)</span> may be also used either as an alternative or in parallel. These packages, developed for modeling RNA-seq read counts, enable GLMs to be fit.</p>
+<p>The core differential analysis in <code>DiffBind</code> is performed by one or more underlying read count modeling Bioconductor packages. The default package is <code>DESeq2</code> <span class="citation">(Love, Huber, and Anders 2014)</span>; the <code>edgeR</code> package <span class="citation">(Robinson, McCarthy, and Smyth 2010)</span> may be also used either as an alternative or in parallel. These packages, developed for modeling RNA-seq read counts, enable GLMs to be fit.</p>
 <div id="default-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#default-model" class="anchor"></a>Default model</h2>
@@ -682,7 +681,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <div id="plotting-clustering-correlation-heatmap" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plotting-clustering-correlation-heatmap" class="anchor"></a>Plotting: Clustering correlation heatmap</h2>
-<p>We can also re-visit the clustering plots we originally did on the full binding matrix, except this time only taking differential sites intro consideration:</p>
+<p>We can also re-visit the clustering plots we originally did on the full binding matrix, except this time only taking differential sites into consideration:</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/corhmcontrast-1.png" width="100%"></p>
@@ -746,7 +745,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <span class="co">## Design: [~Tissue + Condition] | 1 Contrast:</span>
 <span class="co">##      Factor     Group Samples     Group2 Samples2 DB.DESeq2</span>
 <span class="co">## 1 Condition Resistant       4 Responsive        7       783</span></code></pre></div>
-<p>With the multi-factor model taking into account the underlying tissue types, we now identify 783 differential sites at the default threshold of <code>FDR &lt; 0.05</code>. The resulting MA plot shows these are biased towards loss of binding the in <code>Resistant</code> condition:</p>
+<p>With the multi-factor model taking into account the underlying tissue types, we now identify 783 differential sites at the default threshold of <code>FDR &lt; 0.05</code>. The resulting MA plot shows these are biased towards loss of binding in the <code>Resistant</code> condition:</p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>, contrast<span class="op">=</span><span class="fl">1</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/mamulti-1.png" width="100%"></p>
@@ -760,15 +759,15 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <div id="core-normalization-methods" class="section level2">
 <h2 class="hasAnchor">
 <a href="#core-normalization-methods" class="anchor"></a>Core normalization methods</h2>
-<p>The default normalization method in <code>DiffBind</code> is to look only at the relative library sizes (number of aligned reads) of the experimental samples. Why don’t we use the underlying analysis methods inherent in the <code>DESeq2</code> (RLE) and <code>edgeR</code> (TMM) differential analysis packages?</p>
-<p>Consider the sample experiment. We saw in the first two MA plots that there was a bias towards greater read concentration in the <code>Responsive</code> condition; this was reduced somewhat, but still remained, after library-size normalization, and the analysis identified more differential sites that gained binding in the <code>Responsive</code> condition (also seen as binding loss in the <code>Responsive</code> condition:)</p>
+<p>The default normalization method in <code>DiffBind</code> is to look only at the relative library sizes (number of aligned reads) of the experimental samples. Why don’t we use the underlying normalization methods inherent in the <code>DESeq2</code> (RLE, or Relative Log Expression) and <code>edgeR</code> (TMM, Trimmed Mean of M-values) differential analysis packages?</p>
+<p>Consider the example experiment. We saw in the first two MA plots that there was a bias towards greater read concentration in the <code>Responsive</code> condition; this was reduced somewhat, but still remained, after library-size normalization, and the analysis identified more differential sites that gained binding in the <code>Responsive</code> condition (alternatively interpretable as binding loss in the <code>Responsive</code> condition:)</p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">FALSE</span>, th<span class="op">=</span><span class="fl">0</span>, sub<span class="op">=</span><span class="st">"Non-Normalized"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/norm2maplots1-1.png" width="100%"></p>
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">TRUE</span>, sub<span class="op">=</span><span class="st">"Normalized: Library Size"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/norm2maplots1-2.png" width="100%"></p>
-<p>Let’s see what happens if we normalizing using the “native” method in <code>DESeq2</code>, RLE:</p>
+<p>Let’s see what happens if we normalize against the binding matrix (<code>RiP</code>) using the “native” method in <code>DESeq2</code>, RLE:</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.model</span>, normalize<span class="op">=</span><span class="st">"RLE"</span><span class="op">)</span>
 <span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.analyze.html">dba.analyze</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
@@ -778,7 +777,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <span class="co">## final dispersion estimates</span>
 <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotMA.html">dba.plotMA</a></span><span class="op">(</span><span class="va">tam.model</span>,bNormalized<span class="op">=</span><span class="cn">TRUE</span>, sub<span class="op">=</span><span class="st">"Normalized: RLE [RiP]"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normRLERiP-1.png" width="100%"></p>
-<p>The result is quite different! The read concentrations are closely balanced and fit near the zero log fold change line. The differential sites are also more balance between those losing and gaining affinity in the <code>Resistant</code> condition:</p>
+<p>The result is quite different! The read concentrations are closely balanced and fit near the zero log fold change line. The differential sites are also more balanced between those losing and gaining affinity in the <code>Resistant</code> condition:</p>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rep</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.report.html">dba.report</a></span><span class="op">(</span><span class="va">tam.model</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">rep</span><span class="op">$</span><span class="va">Fold</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
@@ -791,8 +790,8 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <div id="reference-reads" class="section level2">
 <h2 class="hasAnchor">
 <a href="#reference-reads" class="anchor"></a>Reference reads</h2>
-<p>It turns out that for the type of data we are dealing with in DNA enrichment assays, the reads that are used as the reference for normalizing are more important that the normalization method itself. While in RNA-seq experiments the expression matrix can be normalized directly, based on the reads that uniquely overlap genes or transcripts (known as “Reads-in-Peaks”, or “RiP”), this does not apply to a binding matrix based on a consensus peakset.</p>
-<p>In a non-peak bases analysis such as is done using the <code>csaw</code> package<span class="citation">(Lun and Smyth 2016)</span>, where there is no consensus binding matrix, this issue was addressed by using a large “bins” of reads across the genome. The idea is that the bins, being so much larger in size than binding sites or stretches of open chromatin, contain mostly “background” reads, and present a less biased way of providing a read count matrix on which to base normalization calculations. This “background” method is included in <code>DiffBind</code> <em>NB: This is a compute-intensive step, however if you have loaded the</em> <em>pre-computed counts, these already include the background reads</em> <em>so this operation may be safely run</em>:</p>
+<p>It turns out that for the type of data we are dealing with in DNA enrichment assays, the reads that are used as the reference for normalizing are more important than the normalization method itself. While in RNA-seq experiments the expression matrix can be normalized directly, based on the reads that uniquely overlap genes or transcripts, this does not apply to a binding matrix based on a consensus peakset.</p>
+<p>In a windowing based analysis such as is done using the <code>csaw</code> package<span class="citation">(Lun and Smyth 2016)</span>, where there is no consensus binding matrix, this issue was addressed by using large (&gt;10,000bp) “bins” of reads across the genome. The idea is that the bins, being so much larger in size than binding sites or stretches of open chromatin, contain mostly “background” reads, and present a less biased way of providing a read count matrix on which to base normalization calculations. This “background” method is included in <code>DiffBind</code> <em>NB: This is a compute-intensive step, however if you have loaded the</em> <em>pre-computed counts, these already include the background reads</em> <em>so this operation may be safely run</em>:</p>
 <div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tam.model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize</a></span><span class="op">(</span><span class="va">tam.model</span>, normalize<span class="op">=</span><span class="st">"RLE"</span>,
                            background<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -835,7 +834,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cor</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/DiffBind/man/dba.plotHeatmap.html">dba.plotHeatmap</a></span><span class="op">(</span><span class="va">norm.comp</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normcorplot-1.png" width="100%"></p>
-<p>This shows how the results cluster. While all the analysis have a core sets of sites in common (the lowest correlation between analyses is 0.82, there are two distinct clusters driven not by the normalization methods, but by the choice of reference reads. One cluster uses <em>all</em> the reads (background bins <code>BG</code> or full library size <code>full</code>), while the other cluster normalizes based only on reads in the binding matrix (<code>RiP</code>). The least important difference is the choice of normalization methods: <code>edgeR</code>’s TMM method and <code>DESeq2</code>’s RLE method produce essentially the same results when using the same reference reads.</p>
+<p>This shows how the results cluster. While all the analysis have a core set of sites in common (the lowest correlation between analyses is 0.82, there are two distinct clusters driven not by the normalization methods, but by the choice of reference reads. One cluster uses <em>all</em> the reads (background bins <code>BG</code> or full library size <code>full</code>), while the other cluster normalizes based only on reads in the binding matrix (<code>RiP</code>). The least important difference is the choice of normalization methods: <code>edgeR</code>’s TMM method and <code>DESeq2</code>’s RLE method produce essentially the same results when using the same reference reads.</p>
 <p>Next we can look at differences in the differential sites themselves by plotting a heatmap of the log fold changes (LFC) of each site:</p>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hmap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"black"</span>, <span class="st">"green"</span><span class="op">)</span><span class="op">)</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>
@@ -844,13 +843,13 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
                 minval<span class="op">=</span><span class="op">-</span><span class="fl">4</span>, maxval<span class="op">=</span><span class="fl">4</span>,
                 key.title <span class="op">=</span> <span class="st">"LFC"</span>, main <span class="op">=</span> <span class="st">"DESeq2 Differentially Bound Sites"</span><span class="op">)</span></code></pre></div>
 <p><img src="Quantitative-ChIPseq-Workshop_files/figure-html/normheatmap-1.png" width="100%"></p>
-<p>Sites in green are ones that Gain binding intensity in the <code>Resistant</code> condition, while those in red lose binding intensity. Sites in black are ones that are not identified in a specific analysis. This plot again shows how the analyses cluster first by the choice of reference reads, but also shows how the balance of sites changes, with one cluster identifying mostly Loss (red) sites, and the other <code>RiP</code> cluster identifying many more Gain sites.</p>
+<p>Sites in green are ones that gain binding intensity in the <code>Resistant</code> condition, while those in red lose binding intensity. Sites in black are ones that are not identified in a specific analysis. This plot again shows how the analyses cluster first by the choice of reference reads, but also shows how the balance of sites changes, with one cluster identifying mostly Loss (red) sites, and the other <code>RiP</code> cluster identifying many more Gain sites.</p>
 <p>The biological conclusions one might reach could be quite different depending on which normalization scheme is chosen.</p>
 </div>
 <div id="spike-ins-and-parallel-factors" class="section level2">
 <h2 class="hasAnchor">
 <a href="#spike-ins-and-parallel-factors" class="anchor"></a>Spike-ins and parallel factors</h2>
-<p>While it is beyond the scope of this workshop, it is worth nothing that alternative sets of reference reads can be used. <code>DiffBind</code> supports the use of spike-ins, where the reads used to normalize the libraries are based on those aligned to exogenous chromatin (eg. from <em>Drosophila melanogaster</em>), or are identified as peaks associated with a factor or mark that is known to not change under the experimental conditions. See the <code>DiffBind</code> vignette, and help page for <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize()</a></code>, for guidance on how to perform such normalization.</p>
+<p>While it is beyond the scope of this workshop, it is worth noting that alternative sets of reference reads can be used. <code>DiffBind</code> supports the use of spike-ins, where the reads used to normalize the libraries are based on those aligned to exogenous chromatin (eg. from <em>Drosophila melanogaster</em>), or are identified as peaks associated with a factor or mark that is known to not change under the experimental conditions. See the <code>DiffBind</code> vignette, and help page for <code><a href="https://rdrr.io/pkg/DiffBind/man/dba.normalize.html">dba.normalize()</a></code>, for guidance on how to perform such normalization.</p>
 <p><br><br><br><br></p>
 </div>
 </div>
@@ -941,7 +940,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <span class="co">## [127] withr_2.3.0              GenomicAlignments_1.26.0 batchtools_0.9.14       </span>
 <span class="co">## [130] Rsamtools_2.6.0          GenomeInfoDbData_1.2.4   hms_0.5.3               </span>
 <span class="co">## [133] grid_4.0.3               DOT_0.1                  coda_0.19-4             </span>
-<span class="co">## [136] rmarkdown_2.5            ashr_2.2-47              mixsqp_0.3-43           </span>
+<span class="co">## [136] rmarkdown_2.6            ashr_2.2-47              mixsqp_0.3-43           </span>
 <span class="co">## [139] bbmle_1.0.23.1           numDeriv_2016.8-1.1</span></code></pre></div>
 <p><br><br><br><br></p>
 <p>#References</p>
