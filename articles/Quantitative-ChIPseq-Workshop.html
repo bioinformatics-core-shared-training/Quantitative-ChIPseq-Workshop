@@ -37,7 +37,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">QuantitativeChIPseqWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Workshop: Quantitative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays</h1>
                         <h4 class="author">Rory Stark</h4>
             <address class="author_afil">
-      Cancer Research UK Cambridge Institute, University of Cambridge, Cambridge, UK<br><h4 class="date">December 14, 2020</h4>
+      Cancer Research UK Cambridge Institute, University of Cambridge, Cambridge, UK<br><h4 class="date">February 16, 2021</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/blob/master/vignettes/Quantitative-ChIPseq-Workshop.Rmd"><code>vignettes/Quantitative-ChIPseq-Workshop.Rmd</code></a></small>
       <div class="hidden name"><code>Quantitative-ChIPseq-Workshop.Rmd</code></div>
@@ -620,30 +620,30 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <pre><code>## GRanges object with 246 ranges and 6 metadata columns:
 ##        seqnames            ranges strand |      Conc Conc_Resistant
 ##           &lt;Rle&gt;         &lt;IRanges&gt;  &lt;Rle&gt; | &lt;numeric&gt;      &lt;numeric&gt;
-##    976    chr18 26861047-26861447      * |      8.37           4.45
-##   2470    chr18 65030123-65030523      * |      6.02           2.66
-##   1484    chr18 41369550-41369950      * |      8.26           5.12
-##   2452    chr18 64490736-64491136      * |      7.43           3.24
-##   2338    chr18 60892950-60893350      * |      8.09           3.45
+##    976    chr18 26861047-26861447      * |   8.37281        4.44855
+##   2470    chr18 65030123-65030523      * |   6.02482        2.65613
+##   1484    chr18 41369550-41369950      * |   8.25529        5.12414
+##   2452    chr18 64490736-64491136      * |   7.42827        3.23712
+##   2338    chr18 60892950-60893350      * |   8.09133        3.44567
 ##    ...      ...               ...    ... .       ...            ...
-##   2524    chr18 67565747-67566147      * |      3.80           2.44
-##   1221    chr18 33021825-33022225      * |      5.04           2.81
-##    433    chr18 11320959-11321359      * |      4.29           5.16
-##    235    chr18   7757228-7757628      * |      5.05           6.13
-##   1405    chr18 38482793-38483193      * |      4.23           2.03
-##        Conc_Responsive      Fold   p-value       FDR
-##              &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt; &lt;numeric&gt;
-##    976            8.99     -3.09  1.82e-08  3.36e-05
-##   2470            6.63     -2.86  2.84e-08  3.36e-05
-##   1484            8.85     -2.75  3.83e-08  3.36e-05
-##   2452            8.05     -3.09  4.82e-08  3.36e-05
-##   2338            8.72     -3.13  7.73e-08  4.31e-05
-##    ...             ...       ...       ...       ...
-##   2524            4.24     -1.30   0.00423    0.0486
-##   1221            5.58     -1.46   0.00424    0.0486
-##    433            3.38      1.31   0.00429    0.0491
-##    235            3.57      1.45   0.00436    0.0497
-##   1405            4.76     -1.46   0.00441    0.0500
+##   2524    chr18 67565747-67566147      * |   3.80325        2.43917
+##   1221    chr18 33021825-33022225      * |   5.04267        2.81227
+##    433    chr18 11320959-11321359      * |   4.29417        5.15749
+##    235    chr18   7757228-7757628      * |   5.04773        6.13374
+##   1405    chr18 38482793-38483193      * |   4.23057        2.02778
+##        Conc_Responsive      Fold     p-value         FDR
+##              &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;   &lt;numeric&gt;
+##    976         8.98991  -3.09374 1.81584e-08 3.36377e-05
+##   2470         6.62520  -2.86498 2.84202e-08 3.36377e-05
+##   1484         8.84621  -2.74884 3.82692e-08 3.36377e-05
+##   2452         8.05134  -3.08707 4.82434e-08 3.36377e-05
+##   2338         8.72229  -3.12556 7.73225e-08 4.31305e-05
+##    ...             ...       ...         ...         ...
+##   2524         4.23561  -1.30051  0.00423292   0.0486294
+##   1221         5.57838  -1.46474  0.00423698   0.0486294
+##    433         3.38332   1.31165  0.00429149   0.0490532
+##    235         3.56723   1.45105  0.00436302   0.0496672
+##   1405         4.76394  -1.45924  0.00440771   0.0499719
 ##   -------
 ##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</code></pre>
 <p>For each site, the genomic interval is reported, as well as the key statistics:</p>
@@ -876,7 +876,7 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">## R version 4.0.3 (2020-10-10)</span>
 <span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04 LTS</span>
+<span class="co">## Running under: Ubuntu 20.04.1 LTS</span>
 <span class="co">## </span>
 <span class="co">## Matrix products: default</span>
 <span class="co">## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so</span>
@@ -895,61 +895,62 @@ overlapping read counts for the consensus site, and the Y-axis shows the log2 fo
 <span class="co">## </span>
 <span class="co">## other attached packages:</span>
 <span class="co">##  [1] csaw_1.24.3                 GreyListChIP_1.22.0        </span>
-<span class="co">##  [3] DiffBind_3.0.8              SummarizedExperiment_1.20.0</span>
-<span class="co">##  [5] Biobase_2.50.0              MatrixGenerics_1.2.0       </span>
-<span class="co">##  [7] matrixStats_0.57.0          GenomicRanges_1.42.0       </span>
+<span class="co">##  [3] DiffBind_3.0.13             SummarizedExperiment_1.20.0</span>
+<span class="co">##  [5] Biobase_2.50.0              MatrixGenerics_1.2.1       </span>
+<span class="co">##  [7] matrixStats_0.58.0          GenomicRanges_1.42.0       </span>
 <span class="co">##  [9] GenomeInfoDb_1.26.2         IRanges_2.24.1             </span>
 <span class="co">## [11] S4Vectors_0.28.1            BiocGenerics_0.36.0        </span>
-<span class="co">## [13] knitr_1.30                 </span>
+<span class="co">## [13] knitr_1.31                 </span>
 <span class="co">## </span>
 <span class="co">## loaded via a namespace (and not attached):</span>
 <span class="co">##   [1] GOstats_2.56.0           backports_1.2.1          BiocFileCache_1.14.0    </span>
-<span class="co">##   [4] systemfonts_0.3.2        plyr_1.8.6               GSEABase_1.52.1         </span>
-<span class="co">##   [7] splines_4.0.3            BiocParallel_1.24.1      ggplot2_3.3.2           </span>
+<span class="co">##   [4] systemfonts_1.0.1        plyr_1.8.6               GSEABase_1.52.1         </span>
+<span class="co">##   [7] splines_4.0.3            BiocParallel_1.24.1      ggplot2_3.3.3           </span>
 <span class="co">##  [10] amap_0.8-18              digest_0.6.27            invgamma_1.1            </span>
-<span class="co">##  [13] htmltools_0.5.0          GO.db_3.12.1             SQUAREM_2020.5          </span>
-<span class="co">##  [16] magrittr_2.0.1           checkmate_2.0.0          memoise_1.1.0           </span>
+<span class="co">##  [13] htmltools_0.5.1.1        GO.db_3.12.1             SQUAREM_2021.1          </span>
+<span class="co">##  [16] magrittr_2.0.1           checkmate_2.0.0          memoise_2.0.0           </span>
 <span class="co">##  [19] BSgenome_1.58.0          base64url_1.4            limma_3.46.0            </span>
-<span class="co">##  [22] Biostrings_2.58.0        annotate_1.68.0          systemPipeR_1.24.2      </span>
+<span class="co">##  [22] Biostrings_2.58.0        annotate_1.68.0          systemPipeR_1.24.3      </span>
 <span class="co">##  [25] bdsmatrix_1.3-4          askpass_1.1              pkgdown_1.6.1           </span>
 <span class="co">##  [28] prettyunits_1.1.1        jpeg_0.1-8.1             colorspace_2.0-0        </span>
-<span class="co">##  [31] blob_1.2.1               rappdirs_0.3.1           apeglm_1.12.0           </span>
-<span class="co">##  [34] ggrepel_0.8.2            textshaping_0.2.1        xfun_0.19               </span>
-<span class="co">##  [37] dplyr_1.0.2              crayon_1.3.4             RCurl_1.98-1.2          </span>
-<span class="co">##  [40] jsonlite_1.7.2           graph_1.68.0             genefilter_1.72.0       </span>
+<span class="co">##  [31] blob_1.2.1               rappdirs_0.3.3           apeglm_1.12.0           </span>
+<span class="co">##  [34] ggrepel_0.9.1            textshaping_0.3.0        xfun_0.21               </span>
+<span class="co">##  [37] dplyr_1.0.4              crayon_1.4.1             RCurl_1.98-1.2          </span>
+<span class="co">##  [40] jsonlite_1.7.2           graph_1.68.0             genefilter_1.72.1       </span>
 <span class="co">##  [43] brew_1.0-6               survival_3.2-7           VariantAnnotation_1.36.0</span>
 <span class="co">##  [46] glue_1.4.2               gtable_0.3.0             zlibbioc_1.36.0         </span>
-<span class="co">##  [49] XVector_0.30.0           DelayedArray_0.16.0      V8_3.4.0                </span>
+<span class="co">##  [49] XVector_0.30.0           DelayedArray_0.16.1      V8_3.4.0                </span>
 <span class="co">##  [52] Rgraphviz_2.34.0         scales_1.1.1             mvtnorm_1.1-1           </span>
-<span class="co">##  [55] pheatmap_1.0.12          DBI_1.1.0                edgeR_3.32.0            </span>
-<span class="co">##  [58] Rcpp_1.0.5               xtable_1.8-4             progress_1.2.2          </span>
+<span class="co">##  [55] pheatmap_1.0.12          DBI_1.1.1                edgeR_3.32.1            </span>
+<span class="co">##  [58] Rcpp_1.0.6               xtable_1.8-4             progress_1.2.2          </span>
 <span class="co">##  [61] emdbook_1.3.12           bit_4.0.4                rsvg_2.1                </span>
 <span class="co">##  [64] truncnorm_1.0-8          AnnotationForge_1.32.0   httr_1.4.2              </span>
 <span class="co">##  [67] gplots_3.1.1             RColorBrewer_1.1-2       ellipsis_0.3.1          </span>
 <span class="co">##  [70] farver_2.0.3             pkgconfig_2.0.3          XML_3.99-0.5            </span>
-<span class="co">##  [73] dbplyr_2.0.0             locfit_1.5-9.4           labeling_0.4.2          </span>
-<span class="co">##  [76] tidyselect_1.1.0         rlang_0.4.9              AnnotationDbi_1.52.0    </span>
-<span class="co">##  [79] munsell_0.5.0            tools_4.0.3              generics_0.1.0          </span>
-<span class="co">##  [82] RSQLite_2.2.1            evaluate_0.14            stringr_1.4.0           </span>
-<span class="co">##  [85] yaml_2.2.1               ragg_0.4.0               bit64_4.0.5             </span>
-<span class="co">##  [88] fs_1.5.0                 caTools_1.18.0           purrr_0.3.4             </span>
-<span class="co">##  [91] RBGL_1.66.0              xml2_1.3.2               biomaRt_2.46.0          </span>
-<span class="co">##  [94] debugme_1.1.0            compiler_4.0.3           curl_4.3                </span>
-<span class="co">##  [97] png_0.1-7                geneplotter_1.68.0       tibble_3.0.4            </span>
-<span class="co">## [100] stringi_1.5.3            GenomicFeatures_1.42.1   desc_1.2.0              </span>
-<span class="co">## [103] lattice_0.20-41          Matrix_1.2-18            vctrs_0.3.5             </span>
-<span class="co">## [106] pillar_1.4.7             lifecycle_0.2.0          irlba_2.3.3             </span>
-<span class="co">## [109] data.table_1.13.4        bitops_1.0-6             rtracklayer_1.50.0      </span>
-<span class="co">## [112] R6_2.5.0                 latticeExtra_0.6-29      hwriter_1.3.2           </span>
-<span class="co">## [115] bookdown_0.21            ShortRead_1.48.0         KernSmooth_2.23-18      </span>
-<span class="co">## [118] codetools_0.2-18         MASS_7.3-53              gtools_3.8.2            </span>
-<span class="co">## [121] assertthat_0.2.1         DESeq2_1.30.0            openssl_1.4.3           </span>
-<span class="co">## [124] Category_2.56.0          rprojroot_2.0.2          rjson_0.2.20            </span>
-<span class="co">## [127] withr_2.3.0              GenomicAlignments_1.26.0 batchtools_0.9.14       </span>
-<span class="co">## [130] Rsamtools_2.6.0          GenomeInfoDbData_1.2.4   hms_0.5.3               </span>
-<span class="co">## [133] grid_4.0.3               DOT_0.1                  coda_0.19-4             </span>
-<span class="co">## [136] rmarkdown_2.6            ashr_2.2-47              mixsqp_0.3-43           </span>
-<span class="co">## [139] bbmle_1.0.23.1           numDeriv_2016.8-1.1</span></code></pre></div>
+<span class="co">##  [73] dbplyr_2.1.0             locfit_1.5-9.4           labeling_0.4.2          </span>
+<span class="co">##  [76] tidyselect_1.1.0         rlang_0.4.10             AnnotationDbi_1.52.0    </span>
+<span class="co">##  [79] munsell_0.5.0            tools_4.0.3              cachem_1.0.4            </span>
+<span class="co">##  [82] generics_0.1.0           RSQLite_2.2.3            evaluate_0.14           </span>
+<span class="co">##  [85] stringr_1.4.0            fastmap_1.1.0            yaml_2.2.1              </span>
+<span class="co">##  [88] ragg_1.1.0               bit64_4.0.5              fs_1.5.0                </span>
+<span class="co">##  [91] caTools_1.18.1           purrr_0.3.4              RBGL_1.66.0             </span>
+<span class="co">##  [94] xml2_1.3.2               biomaRt_2.46.3           debugme_1.1.0           </span>
+<span class="co">##  [97] compiler_4.0.3           curl_4.3                 png_0.1-7               </span>
+<span class="co">## [100] geneplotter_1.68.0       tibble_3.0.6             stringi_1.5.3           </span>
+<span class="co">## [103] highr_0.8                GenomicFeatures_1.42.1   desc_1.2.0              </span>
+<span class="co">## [106] lattice_0.20-41          Matrix_1.3-2             vctrs_0.3.6             </span>
+<span class="co">## [109] pillar_1.4.7             lifecycle_1.0.0          irlba_2.3.3             </span>
+<span class="co">## [112] data.table_1.13.6        bitops_1.0-6             rtracklayer_1.50.0      </span>
+<span class="co">## [115] R6_2.5.0                 latticeExtra_0.6-29      hwriter_1.3.2           </span>
+<span class="co">## [118] bookdown_0.21            ShortRead_1.48.0         KernSmooth_2.23-18      </span>
+<span class="co">## [121] codetools_0.2-18         MASS_7.3-53.1            gtools_3.8.2            </span>
+<span class="co">## [124] assertthat_0.2.1         DESeq2_1.30.0            openssl_1.4.3           </span>
+<span class="co">## [127] Category_2.56.0          rprojroot_2.0.2          rjson_0.2.20            </span>
+<span class="co">## [130] withr_2.4.1              GenomicAlignments_1.26.0 batchtools_0.9.15       </span>
+<span class="co">## [133] Rsamtools_2.6.0          GenomeInfoDbData_1.2.4   hms_1.0.0               </span>
+<span class="co">## [136] grid_4.0.3               coda_0.19-4              DOT_0.1                 </span>
+<span class="co">## [139] rmarkdown_2.6            ashr_2.2-47              mixsqp_0.3-43           </span>
+<span class="co">## [142] bbmle_1.0.23.1           numDeriv_2016.8-1.1</span></code></pre></div>
 <p><br><br><br><br></p>
 <p>#References</p>
 <div id="refs" class="references">
