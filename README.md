@@ -111,7 +111,7 @@ the "Help" pane in RStudio as follows:
 vignette("Quantitative-ChIPseq-Workshop","QuantitativeChIPseqWorkshop")
 ```
 
-### Follow the workshop in the pre-built HTML in a searate Browser window or tab
+### Follow the workshop in the pre-built HTML in a separate Browser window or tab
 If you are using the Docker image,
 You can open the fully built workshop (with all code and results) in
 a browser tab as follows:
