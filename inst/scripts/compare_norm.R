@@ -54,4 +54,4 @@ for(norm in c("lib","RLE","TMM")) {
 }
 norm.comp <- dba(norm.comp,minOverlap=1)
 norm.comp
-dba.save(norm.comp,"norm_comp.rda")
+dba.save(norm.comp,"norm_comp")
