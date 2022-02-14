@@ -25,6 +25,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -37,18 +39,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">QuantitativeChIPseqWorkshop</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -68,7 +64,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop">
-    <span class="fas fa-github"></span>
+    <span class="fa fa-github"></span>
      
   </a>
 </li>
@@ -85,25 +81,23 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<hr>
-<p>title: “Quantitative-ChIPseq-Workshop” author: “Rory Stark” date: “November 25, 2020” output: html_document —</p>
-<div id="quantitiative-analysis-of-chip-seq-atac-seq-and-related-dna-enrichment-assays" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#quantitiative-analysis-of-chip-seq-atac-seq-and-related-dna-enrichment-assays" class="anchor"></a>Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays.</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="quantitiative-analysis-of-chip-seq-atac-seq-and-related-dna-enrichment-assays">Quantitiative analysis of ChiP-seq, ATAC-seq, and related DNA enrichment assays.<a class="anchor" aria-label="anchor" href="#quantitiative-analysis-of-chip-seq-atac-seq-and-related-dna-enrichment-assays"></a>
+</h1></div>
 </div>
-<div id="instructor" class="section level1">
-<h1 class="hasAnchor">
-<a href="#instructor" class="anchor"></a>Instructor</h1>
+<div class="section level1">
+<h1 id="instructor">Instructor<a class="anchor" aria-label="anchor" href="#instructor"></a>
+</h1>
 <p>Rory Stark, Principal Scientist Computational Biology, University of Cambridge, Cancer Research UK Cambridge Institute</p>
 <p><a href="mailto:rory.stark@cruk.cam.ac.uk" class="email">rory.stark@cruk.cam.ac.uk</a></p>
 </div>
-<div id="workshop-description" class="section level1">
-<h1 class="hasAnchor">
-<a href="#workshop-description" class="anchor"></a>Workshop Description</h1>
+<div class="section level1">
+<h1 id="workshop-description">Workshop Description<a class="anchor" aria-label="anchor" href="#workshop-description"></a>
+</h1>
 <p>This workshop will demonstrate the steps involved in performing a quantitative analysis of ChIP-seq data in <em>Bioconductor</em> (specifically differential binding analysis), with some discussion of related assays such as ATAC-seq. Particular attention will be paid to processing of aligned reads, including blacklisting, greylisting, filtering for quality and duplication, and the particular challenges presented when normalizing these data. While the workshop follows the <em>DiffBind</em> package vignette, the use of a number of other <em>Bioconductor</em> packages is discussed, including <em>csaw</em>, <em>ChIPQC</em>, <em>edgeR</em>, <em>DESeq2</em>, and <em>GreyListChIP</em>.</p>
-<div id="pre-requisites" class="section level2">
-<h2 class="hasAnchor">
-<a href="#pre-requisites" class="anchor"></a>Pre-requisites</h2>
+<div class="section level2">
+<h2 id="pre-requisites">Pre-requisites<a class="anchor" aria-label="anchor" href="#pre-requisites"></a>
+</h2>
 <p>Attendees should be familiar with the following:</p>
 <ul>
 <li>Basic knowledge of R syntax</li>
@@ -122,57 +116,58 @@
 </ul>
 <p>Email the instructor if you would like a copy.</p>
 </div>
-<div id="workshop-participation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#workshop-participation" class="anchor"></a>Workshop participation</h2>
-<p>Students will participate by following along an <a href="https://rmarkdown.rstudio.com/"><em>R markdown</em></a> document, and asking questions throughout the workshop.</p>
+<div class="section level2">
+<h2 id="workshop-participation">Workshop participation<a class="anchor" aria-label="anchor" href="#workshop-participation"></a>
+</h2>
+<p>Students will participate by following along an <a href="https://rmarkdown.rstudio.com/" class="external-link"><em>R markdown</em></a> document, and asking questions throughout the workshop.</p>
 <p>The conference organizers have arranged for attendees to have access to a RStudio session running inside a Docker instance that contains everything you need to follow the workshop.</p>
 <p><strong>NOTE</strong>: <em>The workshop Docker instance does not have much compute power.</em> <em>As a result, it is not possible to run all the code in the time allowed.</em> <em>Two operations are affected: building greylists, and counting reads.</em> <em>In these cases, the workshop includes pre-computed data objects that</em> <em>can be loaded to avoid the time-consuming code.</em> <em>This is noted inline.</em></p>
 </div>
-<div id="workshop-participation--local-docker-image" class="section level2">
-<h2 class="hasAnchor">
-<a href="#workshop-participation--local-docker-image" class="anchor"></a>Workshop participation – local Docker image</h2>
+<div class="section level2">
+<h2 id="workshop-participation--local-docker-image">Workshop participation – local Docker image<a class="anchor" aria-label="anchor" href="#workshop-participation--local-docker-image"></a>
+</h2>
 <p>If you do <strong>not</strong> have access to the RStudio instance provided by the conference organizers, or you would like to run the Docker image locally and you have a Docker client installed on your machine, you run this workshop locally via:</p>
 <pre><code>docker pull crukcibioinformatics/quantitative_chip_workshop:latest
 docker images
 docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <p>Then open a browser and go to the URL <strong>localhost:8787</strong>. Log into RStudio with <strong>username:rstudio</strong> and <strong>password:DiffBind</strong>.</p>
 </div>
-<div id="workshop-participation--local-r-installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#workshop-participation--local-r-installation" class="anchor"></a>Workshop participation – local R installation</h2>
+<div class="section level2">
+<h2 id="workshop-participation--local-r-installation">Workshop participation – local R installation<a class="anchor" aria-label="anchor" href="#workshop-participation--local-r-installation"></a>
+</h2>
 <p>The workshop uses a Docker container with Bioconductor Release version <code>3.12</code>. If you would like to install Bioconductor on your computer, install R and the required Bioconductor packages, including this workshop package.</p>
 </div>
-<div id="how-to-follow-the-workshop" class="section level2">
-<h2 class="hasAnchor">
-<a href="#how-to-follow-the-workshop" class="anchor"></a>How to follow the workshop</h2>
+<div class="section level2">
+<h2 id="how-to-follow-the-workshop">How to follow the workshop<a class="anchor" aria-label="anchor" href="#how-to-follow-the-workshop"></a>
+</h2>
 <p>First load the workshop package:</p>
-<pre><code><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop">library(QuantitativeChIPseqWorkshop)</a></code></pre>
+<pre><code><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop">QuantitativeChIPseqWorkshop</a></span><span class="op">)</span></code></pre>
 <p>There are a number of ways to follow the workshop:</p>
-<div id="follow-the-workshop-in-the-pre-built-html-in-rstudio" class="section level3">
-<h3 class="hasAnchor">
-<a href="#follow-the-workshop-in-the-pre-built-html-in-rstudio" class="anchor"></a>Follow the workshop in the pre-built HTML in RStudio</h3>
+<div class="section level3">
+<h3 id="follow-the-workshop-in-the-pre-built-html-in-rstudio">Follow the workshop in the pre-built HTML in RStudio<a class="anchor" aria-label="anchor" href="#follow-the-workshop-in-the-pre-built-html-in-rstudio"></a>
+</h3>
 <p>You can open the fully built workshop (with all code and results) in the “Help” pane in RStudio as follows:</p>
-<pre><code><a href="articles/Quantitative-ChIPseq-Workshop.html">vignette("Quantitative-ChIPseq-Workshop","QuantitativeChIPseqWorkshop")</a></code></pre>
+<pre><code><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"Quantitative-ChIPseq-Workshop"</span>,<span class="st">"QuantitativeChIPseqWorkshop"</span><span class="op">)</span></code></pre>
 </div>
-<div id="follow-the-workshop-in-the-pre-built-html-in-a-separate-browser-window-or-tab" class="section level3">
-<h3 class="hasAnchor">
-<a href="#follow-the-workshop-in-the-pre-built-html-in-a-separate-browser-window-or-tab" class="anchor"></a>Follow the workshop in the pre-built HTML in a separate Browser window or tab</h3>
+<div class="section level3">
+<h3 id="follow-the-workshop-in-the-pre-built-html-in-a-separate-browser-window-or-tab">Follow the workshop in the pre-built HTML in a separate Browser window or tab<a class="anchor" aria-label="anchor" href="#follow-the-workshop-in-the-pre-built-html-in-a-separate-browser-window-or-tab"></a>
+</h3>
 <p>If you are using the Docker image, You can open the fully built workshop (with all code and results) in a browser tab as follows:</p>
-<pre><code><a href="https://rdrr.io/pkg/rstudioapi/man/viewer.html">rstudioapi::viewer(paste(system.file("doc",package="QuantitativeChIPseqWorkshop"),
-                         "Quantitative-ChIPseq-Workshop.html", sep="/"))</a></code></pre>
+<pre><code><span class="fu">rstudioapi</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/rstudioapi/man/viewer.html" class="external-link">viewer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"doc"</span>,package<span class="op">=</span><span class="st">"QuantitativeChIPseqWorkshop"</span><span class="op">)</span>,
+                         <span class="st">"Quantitative-ChIPseq-Workshop.html"</span>, sep<span class="op">=</span><span class="st">"/"</span><span class="op">)</span><span class="op">)</span></code></pre>
 <p>It may be helpful to move the tab into its own window so you can see the vignette and the RStudio window at the same time.</p>
 </div>
-<div id="follow-the-workshop-directly-in-the-workshop-mark-down-file" class="section level3">
-<h3 class="hasAnchor">
-<a href="#follow-the-workshop-directly-in-the-workshop-mark-down-file" class="anchor"></a>Follow the workshop directly in the workshop mark-down file</h3>
+<div class="section level3">
+<h3 id="follow-the-workshop-directly-in-the-workshop-mark-down-file">Follow the workshop directly in the workshop mark-down file<a class="anchor" aria-label="anchor" href="#follow-the-workshop-directly-in-the-workshop-mark-down-file"></a>
+</h3>
 <p>You can open the workshop “source” .Rmd file in the RStudio “Source” pane, and follow along, executing each code chunk in sequence, to build it as you go.</p>
-<pre><code><a href="https://rdrr.io/r/utils/file.edit.html">file.edit("vignettes/Quantitative-ChIPseq-Workshop.Rmd")</a></code></pre>
+<pre><code><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="st">"vignettes/Quantitative-ChIPseq-Workshop.Rmd"</span><span class="op">)</span></code></pre>
 </div>
 </div>
-<div id="r--bioconductor-packages-used" class="section level2">
-<h2 class="hasAnchor">
-<a href="#r--bioconductor-packages-used" class="anchor"></a><em>R</em> / <em>Bioconductor</em> packages used</h2>
+<div class="section level2">
+<h2 id="r--bioconductor-packages-used">
+<em>R</em> / <em>Bioconductor</em> packages used<a class="anchor" aria-label="anchor" href="#r--bioconductor-packages-used"></a>
+</h2>
 <ul>
 <li><em>DiffBind</em></li>
 <li><em>csaw</em></li>
@@ -182,9 +177,9 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <li><em>GreyListChIP</em></li>
 </ul>
 </div>
-<div id="time-outline" class="section level2">
-<h2 class="hasAnchor">
-<a href="#time-outline" class="anchor"></a>Time outline</h2>
+<div class="section level2">
+<h2 id="time-outline">Time outline<a class="anchor" aria-label="anchor" href="#time-outline"></a>
+</h2>
 <p>The workshop duration is 90 min. Approximate timing of activities:</p>
 <table class="table">
 <thead><tr class="header">
@@ -245,13 +240,13 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 </table>
 </div>
 </div>
-<div id="workshop-goals-and-objectives" class="section level1">
-<h1 class="hasAnchor">
-<a href="#workshop-goals-and-objectives" class="anchor"></a>Workshop goals and objectives</h1>
+<div class="section level1">
+<h1 id="workshop-goals-and-objectives">Workshop goals and objectives<a class="anchor" aria-label="anchor" href="#workshop-goals-and-objectives"></a>
+</h1>
 <p>Participants will learn a complete set of steps for conducting a differential binding analysis of data from a ChIP-seq or related DNA enrichment experiment within <em>Bioconductor</em>.</p>
-<div id="learning-goals" class="section level2">
-<h2 class="hasAnchor">
-<a href="#learning-goals" class="anchor"></a>Learning goals</h2>
+<div class="section level2">
+<h2 id="learning-goals">Learning goals<a class="anchor" aria-label="anchor" href="#learning-goals"></a>
+</h2>
 <ul>
 <li>Gain an understanding of the processing flow for performing quantitative analysis of data from ChIP-seq and related DNA enrichment assays</li>
 <li>Be able to filter and count aligned reads to prepare them for analysis</li>
@@ -259,9 +254,9 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 <li>Complete a differential binding analysis</li>
 </ul>
 </div>
-<div id="learning-objectives" class="section level2">
-<h2 class="hasAnchor">
-<a href="#learning-objectives" class="anchor"></a>Learning objectives</h2>
+<div class="section level2">
+<h2 id="learning-objectives">Learning objectives<a class="anchor" aria-label="anchor" href="#learning-objectives"></a>
+</h2>
 <ul>
 <li>Load experimental data into <em>DiffBind</em>
 </li>
@@ -278,39 +273,51 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/">https://​github.com/​bioinformatics-core-shared-training/​Quantitative-ChIPseq-Workshop/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/issues/new/choose">https://​github.com/​bioinformatics-core-shared-training/​Quantitative-ChIPseq-Workshop/​issues/​new/​choose</a>
-</li>
+<li><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/">Browse source code</a></li>
+<li><a href="https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/issues/new/choose">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Rory Stark <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/https://orcid.org/0000-0002-1790-5469" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing QuantitativeChIPseqWorkshop</a></li>
 </ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Rory Stark <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/https://orcid.org/0000-0002-1790-5469" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Rory Stark.</p>
+  <p></p>
+<p>Developed by Rory Stark.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -318,6 +325,8 @@ docker run -e PASSWORD=DiffBind -p 8787:8787 &lt;imageid&gt; </code></pre>
 
   
 
+
+  
 
   </body>
 </html>

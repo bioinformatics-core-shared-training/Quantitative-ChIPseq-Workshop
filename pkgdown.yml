@@ -1,9 +1,9 @@
-pandoc: 2.7.3
-pkgdown: 1.6.1
+pandoc: 2.14.0.3
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   Quantitative-ChIPseq-Workshop: Quantitative-ChIPseq-Workshop.html
-last_built: 2021-02-16T16:41Z
+last_built: 2022-02-14T18:16Z
 urls:
   reference: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/reference
   article: https://github.com/bioinformatics-core-shared-training/Quantitative-ChIPseq-Workshop/articles
