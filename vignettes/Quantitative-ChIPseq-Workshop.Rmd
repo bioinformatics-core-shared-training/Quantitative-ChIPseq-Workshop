@@ -6,10 +6,9 @@ author:
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 vignette: >
   %\VignetteIndexEntry{QuantitativeChIPWorkshop}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 output:
-  bookdown::html_document2: default
   html_document:
     toc: true
     toc_depth: 2
@@ -17,6 +16,7 @@ output:
     fig_caption: true
     number_sections: true
     mathjax: null
+  bookdown::html_document2: default
 editor_options:
     chunk_output_type: console
 bibliography: DiffBind.bib
@@ -50,41 +50,51 @@ knitr::opts_knit$set(root.dir="../inst/extdata")
 
 Instructions on how to run and follow along during the workshop.
 
-## Workshop participation -- local Docker image
+<!-- ## Workshop participation -- local Docker image -->
 
-If you **not** are already logged into an RStudio instance provided by the conference
-organizers, and you have a Docker client installed on your machine,
-you run this workshop locally via:
+<!-- If you **not** are already logged into an RStudio instance provided by the conference -->
+<!-- organizers, and you have a Docker client installed on your machine, -->
+<!-- you run this workshop locally via: -->
 
-```
-docker pull crukcibioinformatics/quantitative_chip_workshop:latest
-docker images
-docker run -e PASSWORD=DiffBind -p 8787:8787 <imageid> 
-```
-Then open a browser and go to the URL **localhost:8787**.
-Log into RStudio with **username:rstudio** and **password:DiffBind**.
+<!-- ``` -->
+<!-- docker pull crukcibioinformatics/quantitative_chip_workshop:latest -->
+<!-- docker images -->
+<!-- docker run -e PASSWORD=DiffBind -p 8787:8787 <imageid>  -->
+<!-- ``` -->
+<!-- Then open a browser and go to the URL **localhost:8787**. -->
+<!-- Log into RStudio with **username:rstudio** and **password:DiffBind**. -->
 
-**NOTE**: *The workshop Docker instance does not have much compute power.*
-*As a result, it is not possible to run all the code in the time allowed.*
-*Two operations are affected: building greylists, and counting reads.*
-*In these cases, the workshop includes pre-computed data objects that*
-*can be loaded to avoid the time-consuming code.*
-*This is noted inline.*
+<!-- **NOTE**: *The workshop Docker instance does not have much compute power.* -->
+<!-- *As a result, it is not possible to run all the code in the time allowed.* -->
+<!-- *Two operations are affected: building greylists, and counting reads.* -->
+<!-- *In these cases, the workshop includes pre-computed data objects that* -->
+<!-- *can be loaded to avoid the time-consuming code.* -->
+<!-- *This is noted inline.* -->
 
 ## Workshop participation -- local R installation
 
-The workshop uses a Docker container with Bioconductor Release version `3.12`.
-If you would like to install Bioconductor on your computer **at a later date**,
-see the [Bioconductor installation](https://www.bioconductor.org/install)
-instructions.
+<!-- The workshop uses a Docker container with Bioconductor Release version `3.12`. -->
+<!-- If you would like to install Bioconductor on your computer **at a later date**, -->
+<!-- see the [Bioconductor installation](https://www.bioconductor.org/install) -->
+<!-- instructions. -->
 
-Here is a list of packages that we will be using:
+In order to run the workshop, make sure the following packages are installed 
+from Bioconductor. Here is a list of packages that we will be using:
 
 ```{r loadpackages, message=FALSE}
 library(DiffBind)
 library(GreyListChIP)
 library(csaw)
 ```
+
+To run the workshop package, you can download it from here:
+
+https://content.cruk.cam.ac.uk/bioinformatics/software/DiffBind/QuantitativeChIPseqWorkshop_0.1.4.tar.gz
+
+**NOTE**: As this package contains all the workshop data, 
+it is about 500MB and may take some time to download and install.
+
+Install this package into your local R instance.
 
 ## How to follow the workshop
 
@@ -94,53 +104,63 @@ First load the workshop package:
 library(QuantitativeChIPseqWorkshop)
 ```
 
-There are a number of ways to follow the workshop:
+The set the working directory to where package is installed:
 
-### Follow the workshop in the pre-built HTML in RStudio
-You can open the fully built workshop (with all code and results) in
+```{r setdir, eval=FALSE}
+setwd(system.file(package="QuantitativeChIPseqWorkshop"))
+```
+
+There are a number of ways to follow the workshop markdown document.
+You can either view an HTML version of the document that includes all the results,
+or step through the markdown source and build the results as you go.
+
+### Option: Open the pre-built HTML in an RStudio "Help"  window
+You can open the fully completed workbook (with all code and results) in
 the "Help" pane in RStudio as follows:
 
 ```{r workshoppane, eval=FALSE}
 vignette("Quantitative-ChIPseq-Workshop","QuantitativeChIPseqWorkshop")
 ```
 
-### Follow the workshop in the pre-built HTML in a searate Browser window or tab
-If you are using the Docker image,
+### Option: Open the pre-built HTML in a searate Browser window or tab
+
 You can open the fully built workshop (with all code and results) in
 a browser tab as follows:
 
 ```{r workshopbrowser, eval=FALSE}
-rstudioapi::viewer(paste(system.file("doc",
-                                     package="QuantitativeChIPseqWorkshop"),
-                         "Quantitative-ChIPseq-Workshop.html", sep="/"))
+rstudioapi::viewer("doc/Quantitative-ChIPseq-Workshop.html")
 ```
 
-It may be helpful to move the tab into its own window so you can see the vignette and the RStudio window at the same time.
+It may be helpful to move the tab into its own window so you can see the 
+vignette and the RStudio window at the same time.
 
-### Follow the workshop directly in the workshop mark-down file
+### Option: Open the workshop mark-down file in an edit window
 
 You can open the workshop "source" .Rmd file in the RStudio
 "Source" pane, and follow along, 
 executing each code chunk in sequence, to build it as you go.
 
 ```{r workshopsource, eval=FALSE}
-file.edit("vignettes/Quantitative-ChIPseq-Workshop.Rmd")
+file.edit("doc/Quantitative-ChIPseq-Workshop.Rmd")
 ```
 
 ### Set directory to where the data are
 
-First make sure your current working directory is correct:
-
-```{r showdir, echo=FALSE}
-getwd()
-```
-
-The directory should be `"/home/rstudio/inst/extdata"`.
-If it is not, change the working directory:
-
+Now set the directory to where the data is located:
 ```{r chrdir, eval=FALSE,echo=TRUE}
-setwd("inst/extdata")
+setwd("extdata")
 ```
+
+You can check that the data are there:
+
+```{r listdir, eval=TRUE,echo=TRUE}
+list.files()
+```
+
+you should see a samplesheet ("tamoxifen.csv") and 
+directories containing peaks and reads.
+
+Now we're ready to go!
 
 <br><br><br><br>
 
@@ -310,7 +330,7 @@ the `dba.blacklist()` function.
 In addition, if control alignments are available for an experiment,
 experiment-specific exclusion lists can be generated reflecting
 the tissue and experimental conditions used.
-We call these `Greylists`, and thet are generated using
+We call these `Greylists`, and they are generated using
 the `GreyListChIP`package [@brown2015greylistchip].
 The idea is to analyze libraries that are not
 meant to show systematic enrichment (such as Inputs, in which no
@@ -340,9 +360,10 @@ This can be a time-consuming operation, as each of the controls is analyzed for 
 
 The blacklist can be applied, and the greylists generated and applied, in 
 a single step 
-*NB: This is a compute-intensive step that takes too long to run in the workshop*
-*Docker instance;* **do not run the following chunk** *if you are using the*
-*workshop Docker image*:
+*NB: This is a compute-intensive step that may take too long to run in the workshop,*
+*see alternative method to load pre-computed greylists below*
+<!-- *Docker instance;* **do not run the following chunk** *if you are using the* -->
+<!-- *workshop Docker image*: -->
 
 ```{r greylist, eval=FALSE}
 tam.peaks <- dba.blacklist(tam.peaks)
@@ -452,9 +473,9 @@ computing overlapping read counts for each peak in each sample,
 *whether or not it was called as a peak in that sample.*
 
 The function used to accomplish this is `dba.count()`:
-*NB: This is a compute-intensive step that takes too long to run in the workshop*
-*Docker instance;* **do not run the following chunk** *if you are using the*
-*workshop Docker image*:
+*NB: This is a compute-intensive step that may take too long to run in the workshop,*
+*see below for alternative way to load pre-computed counts.*
+
 
 ```{r count, eval=FALSE}
 tam.counts <- dba.count(tam.peaks)
